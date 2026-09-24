@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Networks & Concepts — Study Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf7f1; --panel:#ffffff; --ink:#33302b; --muted:#7a7268; --gold:#c9a96e; --gold-d:#a8854a; --gold-l:#f6eedd;
+  --navy:#34466b; --blue:#e3ecf7; --rose:#f7e4e4; --green:#e2f1e6; --lav:#ece6f6; --peach:#fbe9d9; --line:#e8e1d3;
+  --ok:#3f9a62; --bad:#c2544b; --serif:'Cormorant Garamond',Garamond,Georgia,serif; --sans:'DM Sans',system-ui,-apple-system,Segoe UI,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15.5px;line-height:1.6}
+h1,h2,h3,h4{font-family:var(--serif);color:var(--navy);margin:.2em 0 .4em;line-height:1.2}
+h1{font-size:2.5rem} h2{font-size:1.95rem} h3{font-size:1.4rem}
+a{color:var(--gold-d)}
+.app{display:flex;min-height:100vh}
+.side{width:230px;flex-shrink:0;background:#fffdf8;border-right:1px solid var(--line);padding:26px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px}
+.brand{font-family:var(--serif);font-size:1.45rem;color:var(--navy);font-weight:700;line-height:1.1;margin-bottom:4px}
+.brand small{display:block;font-family:var(--sans);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-d);margin-top:6px;font-weight:500}
+.navbtn{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;border:none;background:transparent;font:500 .98rem var(--sans);color:var(--ink);cursor:pointer;text-align:left}
+.navbtn:hover{background:var(--gold-l)}
+.navbtn.active{background:var(--gold);color:#fff}
+.side .foot{margin-top:auto;font-size:.78rem;color:var(--muted)}
+.progress{height:6px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:6px}
+.progress i{display:block;height:100%;background:var(--gold);width:0;transition:width .4s}
+main{flex:1;min-width:0;padding:34px 44px 80px}
+.panel{display:none;animation:fade .35s}
+.panel.show{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.eyebrow{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-d);font-weight:700}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px 26px;margin:18px 0;box-shadow:0 1px 0 rgba(0,0,0,.02)}
+.note{background:linear-gradient(135deg,#fffdf8,#fbf3e3);border-left:5px solid var(--gold)}
+.note p{font-family:var(--serif);font-size:1.18rem;line-height:1.55;margin:.5em 0}
+.gold{background:var(--gold-l);border:1px solid #e7d6b3;border-left:6px solid var(--gold);border-radius:14px;padding:14px 18px;margin:16px 0;font-family:var(--serif);font-size:1.25rem;font-style:italic;color:#5a4526}
+.gold::before{content:"★ KEY INSIGHT";display:block;font:700 .7rem var(--sans);letter-spacing:.16em;color:var(--gold-d);font-style:normal;margin-bottom:4px}
+.check{background:#f2f5fb;border:1px solid #d6e0ef;border-radius:14px;padding:16px 20px;margin:16px 0}
+.check h4{margin:0 0 8px;font-size:1.15rem}
+.check details{margin:6px 0;background:#fff;border-radius:10px;padding:8px 12px;border:1px solid #e1e8f3}
+.check summary{cursor:pointer;font-weight:500}
+.check details p{margin:8px 0 2px;color:#40526f}
+.hook{background:var(--lav);border-radius:14px;padding:12px 16px;margin-top:14px;display:flex;gap:10px;align-items:flex-start}
+.hook b{color:#5b4a86}
+.friend{background:var(--green);border-radius:14px;padding:12px 16px;margin-top:10px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.93rem;background:#fff;border-radius:12px;overflow:hidden}
+th{background:var(--navy);color:#fff;text-align:left;padding:9px 12px;font-weight:500}
+td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:nth-child(even) td{background:#fcfaf5}
+td.el{font-weight:700;color:var(--navy);background:var(--gold-l)!important;width:24%}
+.tablewrap{overflow-x:auto}
+ul.obj li{margin:5px 0}
+/* overview */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:14px;margin-top:14px}
+.tile{border:1px solid var(--line);border-radius:16px;padding:16px;cursor:pointer;background:#fff;transition:.2s;position:relative}
+.tile:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(120,95,50,.12);border-color:var(--gold)}
+.tile .em{font-size:1.9rem}
+.tile .n{font-size:.72rem;color:var(--gold-d);font-weight:700;letter-spacing:.12em}
+.tile h4{font-size:1.2rem;margin:4px 0}
+.tile p{font-size:.84rem;color:var(--muted);margin:0}
+.tile.done::after{content:"✓";position:absolute;top:10px;right:12px;background:var(--ok);color:#fff;border-radius:50%;width:22px;height:22px;display:grid;place-items:center;font-size:.8rem}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0}
+.stat{flex:1;min-width:120px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;text-align:center}
+.stat b{display:block;font-family:var(--serif);font-size:2rem;color:var(--gold-d)}
+.stat span{font-size:.8rem;color:var(--muted)}
+/* timeline */
+.tl{position:relative;padding:10px 0 0;overflow-x:auto}
+.tl-track{display:flex;gap:0;min-width:900px;position:relative;padding-top:28px}
+.tl-track::before{content:"";position:absolute;top:40px;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold-l),var(--gold),var(--gold-l))}
+.tl-item{flex:1;text-align:center;position:relative;padding:0 4px;cursor:pointer}
+.tl-dot{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--gold);margin:0 auto 8px;position:relative;z-index:1;transition:.2s}
+.tl-item:hover .tl-dot,.tl-item.on .tl-dot{background:var(--gold);transform:scale(1.2)}
+.tl-yr{font-family:var(--serif);font-weight:700;color:var(--navy);font-size:1.1rem}
+.tl-lb{font-size:.75rem;color:var(--muted)}
+.tl-info{margin-top:14px;background:var(--gold-l);border-radius:12px;padding:12px 16px;min-height:50px}
+/* lessons */
+.lesson-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.lesson-nav button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:5px 12px;cursor:pointer;font:500 .8rem var(--sans);color:var(--ink)}
+.lesson-nav button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.lesson-body{display:grid;grid-template-columns:60% 1fr;gap:22px;align-items:start}
+.diagram{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px}
+.diagram svg{width:100%;height:auto;display:block}
+.diagram svg text{font-family:var(--sans)}
+.diagram svg .ser{font-family:var(--serif)}
+.bul{list-style:none;padding:0;margin:0}
+.bul li{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px 10px 42px;margin-bottom:8px;position:relative;font-size:.94rem}
+.bul li::before{content:attr(data-e);position:absolute;left:11px;top:9px;font-size:1.1rem}
+.pager{display:flex;justify-content:space-between;margin-top:22px}
+.btn{border:none;background:var(--gold);color:#fff;border-radius:12px;padding:10px 18px;font:500 .92rem var(--sans);cursor:pointer}
+.btn:hover{background:var(--gold-d)}
+.btn.ghost{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.demo{background:linear-gradient(135deg,#fff,#f5f9fd);border:1px dashed #b8c8e0;border-radius:18px;padding:16px 20px;margin:18px 0}
+.demo h4::before{content:"🧪 ";}
+.chip{display:inline-block;border:1px solid var(--line);background:#fff;border-radius:18px;padding:6px 12px;margin:4px;cursor:pointer;font-size:.88rem;transition:.15s}
+.chip:hover{border-color:var(--gold)}
+.chip.sel{background:var(--gold);color:#fff;border-color:var(--gold)}
+.vid{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.vid a{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px;text-decoration:none;color:var(--ink);font-size:.86rem}
+.vid a:hover{border-color:var(--gold)}
+.vid a::before{content:"▶";background:#e05a4f;color:#fff;border-radius:6px;padding:1px 7px;font-size:.7rem}
+/* flashcards */
+.fc-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 16px}
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.fc{perspective:1000px;height:190px;cursor:pointer}
+.fc-in{position:relative;width:100%;height:100%;transition:transform .55s;transform-style:preserve-3d}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.fc-f,.fc-b{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:center;border:1px solid var(--line)}
+.fc-f{background:#fff;text-align:center}
+.fc-f .t{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-d);font-weight:700;margin-bottom:6px}
+.fc-f .q{font-family:var(--serif);font-size:1.3rem;color:var(--navy);font-weight:600}
+.fc-b{background:var(--gold-l);transform:rotateY(180deg);font-size:.9rem;overflow:auto}
+/* mcq */
+.mcq{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 22px;margin-bottom:16px}
+.mcq .qn{font-size:.72rem;letter-spacing:.14em;color:var(--gold-d);font-weight:700}
+.mcq .qt{font-family:var(--serif);font-size:1.25rem;color:var(--navy);margin:4px 0 10px;font-weight:600}
+.opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fdfcf9;border-radius:10px;padding:9px 12px;margin:6px 0;cursor:pointer;font:400 .93rem var(--sans);color:var(--ink)}
+.opt:hover:not([disabled]){border-color:var(--gold)}
+.opt.right{background:#e3f4e8;border-color:var(--ok);color:#1f5e37}
+.opt.wrong{background:#fbe6e4;border-color:var(--bad);color:#8a2d25}
+.expl{display:none;margin-top:10px;padding:10px 14px;border-radius:10px;background:#f4f1ea;font-size:.9rem}
+.score{position:sticky;top:10px;z-index:5;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.synth{background:linear-gradient(135deg,#fdf8ee,#eef3fa);border:1px solid #e7d6b3;border-radius:20px;padding:24px 28px}
+.synth p{font-family:var(--serif);font-size:1.25rem;line-height:1.6}
+.mobile-top{display:none}
+@media (max-width:900px){
+  .app{flex-direction:column}
+  .side{width:100%;height:auto;position:sticky;top:0;z-index:20;flex-direction:row;align-items:center;padding:10px 12px;overflow-x:auto;border-right:none;border-bottom:1px solid var(--line)}
+  .brand,.side .foot{display:none}
+  .navbtn{padding:8px 12px;white-space:nowrap;font-size:.9rem}
+  main{padding:20px 16px 60px}
+  .lesson-body{grid-template-columns:1fr}
+  h1{font-size:2rem}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="side">
+  <div class="brand">Networks &amp; Concepts<small>Robinson-Riegler · pp. 198–207</small></div>
+  <button class="navbtn active" data-p="overview">🏛️ Overview</button>
+  <button class="navbtn" data-p="lessons">📖 Lessons</button>
+  <button class="navbtn" data-p="flash">🃏 Flashcards</button>
+  <button class="navbtn" data-p="mcq">✅ MCQ</button>
+  <div class="foot">Prepared for <b>Sezen</b><br>Lessons visited<div class="progress"><i id="prog"></i></div><span id="progt">0 / 13</span></div>
+</nav>
+<main>
+
+<section class="panel show" id="overview">
+  <div class="eyebrow">Problem 4b · Robinson-Riegler &amp; Robinson-Riegler · Chapter 5, pp. 198–207</div>
+  <h1>Networks &amp; Concepts 🕸️</h1>
+  <p style="color:var(--muted);margin-top:-4px">The classification database: how knowledge is stored, and what makes a thing what it is. Prepared for Sezen.</p>
+
+  <div class="card note">
+    <div class="eyebrow">A note from your professor</div>
+    <p>Dear Sezen, look at the photo that opens this section: a Great Dane, a Jack Russell, a Dalmatian puppy, a cat and a rabbit. In under a second you say “dogs, cat, rabbit”, even though the black-and-white colouring would put the Dalmatian next to the cat. How does your mind know that three animals that look so different are the <i>same kind</i> of thing?</p>
+    <p>These ten pages answer two questions. First, <b>how is knowledge stored and retrieved?</b> (semantic networks and spreading activation). Second, <b>what gives a category its structure?</b> Here you meet four theories in turn: classical, prototype, exemplar and essentialist. Each new theory fixes the problems of the one before and brings its own. Keep a mental scoreboard as you go. That scoreboard is what exam questions test.</p>
+    <p><b>You have a head start:</b> much of this overlaps with Murphy’s <i>Categories and Concepts</i>, which you’ve already studied. Watch for the new parts: semantic networks, the Posner dot-pattern study, and the problems of context, conjunction and economy. <b>How to read:</b> Key Terms first, then the lessons in order. For each one, study the diagram, read the bullets, say the memory hook out loud, and try the Comprehension Check <i>before</i> you open the answers. — <i>Your Professor</i></p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b>13</b><span>visual lessons</span></div>
+    <div class="stat"><b>6</b><span>key studies</span></div>
+    <div class="stat"><b>7</b><span>interactive demos</span></div>
+    <div class="stat"><b id="fcCount">40</b><span>flashcards</span></div>
+    <div class="stat"><b id="mcqCount">20</b><span>exam questions</span></div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Learning Objectives</h2>
+    <ul class="obj">
+      <li>Describe <b>semantic networks</b> (nodes, links), the <b>category</b> and <b>feature verification tasks</b>, and why <b>speed</b> is the key measure.</li>
+      <li>Explain Collins &amp; Loftus’s (1975) <b>spreading activation model</b> and how it explains <b>semantic priming</b>. Contrast semantic networks with <b>neural networks</b>.</li>
+      <li>Name the <b>functions of concepts</b>: understanding, prediction, learning and communication.</li>
+      <li>Distinguish <b>natural kinds</b>, <b>artifacts</b>, <b>ad hoc</b> and <b>metaphorical</b> categories along Goldstone &amp; Kersten’s (2003) similarity scale.</li>
+      <li>Explain the <b>classical view</b> and its three problems: defining features, <b>graded structure/typicality</b>, and <b>fuzzy boundaries</b>.</li>
+      <li>Explain the <b>prototype approach</b>, the <b>Posner et al. (1967)</b> dot-pattern study, and the prototype’s problems (correlated properties, context, conjunctions).</li>
+      <li>Explain the <b>exemplar approach</b>, what it solves, its problems (Posner, economy), and Malt’s (1989) “both” conclusion.</li>
+      <li>Explain the <b>essentialist approach</b> (concepts as theories; top-down) and Rips’s (1989) challenge to similarity-based views.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>📚 Key Terms: read these first</h2>
+    <div class="tablewrap"><table>
+      <tr><th style="width:26%">Term</th><th>Plain-language definition</th><th style="width:24%">Example</th></tr>
+      <tr><td><b>Semantic network</b></td><td>A model of knowledge as an associative network: concepts are <i>nodes</i>, and relationships between them are <i>links</i>.</td><td>canary — bird — animal</td></tr>
+      <tr><td><b>Node / link</b></td><td>A node stands for one specific concept; a link is a relationship between two concepts.</td><td>“canary” linked to “pet”</td></tr>
+      <tr><td><b>Category verification task</b></td><td>Verify simple category statements as fast as possible.</td><td>“A robin is a bird”</td></tr>
+      <tr><td><b>Feature verification task</b></td><td>Verify statements about features of a concept as fast as possible.</td><td>“A cat has pointy ears”</td></tr>
+      <tr><td><b>Neural network</b></td><td>A model where nodes are like neurons and knowledge is <i>distributed</i>; no single node means “canary”.</td><td>connectionist models</td></tr>
+      <tr><td><b>Spreading activation model</b></td><td>Collins &amp; Loftus (1975): activating one node spreads activation along links to related nodes.</td><td>yellow → lemon, sun</td></tr>
+      <tr><td><b>Threshold</b></td><td>The level of summed activation a node must reach before the concept is activated or identified.</td><td>“lemon” recognised</td></tr>
+      <tr><td><b>Semantic priming</b></td><td>Processing one stimulus speeds up processing of a related stimulus.</td><td>“yellow” speeds “lemon”</td></tr>
+      <tr><td><b>Natural kinds</b></td><td>Also called <i>natural categories</i>: occur naturally in the world; members share basic features.</td><td>flower, bird</td></tr>
+      <tr><td><b>Artifacts</b></td><td>Also called <i>artifact categories</i>: designed by humans for functions; members share fewer features.</td><td>tools, sports, furniture</td></tr>
+      <tr><td><b>Ad hoc category</b></td><td>Formed “on the fly” to serve a goal (Barsalou, 1983).</td><td>things to take on vacation</td></tr>
+      <tr><td><b>Metaphorical concept</b></td><td>Very different situations united by an underlying theme.</td><td>an “emotional prison”</td></tr>
+      <tr><td><b>Similarity-based approaches</b></td><td>Categorise by judging similarity between the target and a standard in long-term memory.</td><td>classical, prototype, exemplar</td></tr>
+      <tr><td><b>Classical view</b></td><td>Members share features that are both <i>necessary and sufficient</i> (Bruner, Goodnow &amp; Austin, 1956).</td><td>triangle</td></tr>
+      <tr><td><b>Graded structure</b></td><td>Category members are not equal; some are better examples than others.</td><td>table vs rug as furniture</td></tr>
+      <tr><td><b>Typicality effect</b></td><td>Some members are judged more typical, and people agree strongly about which ones.</td><td>robin &gt; penguin</td></tr>
+      <tr><td><b>Fuzzy boundaries</b></td><td>Categories have no clear-cut edges.</td><td>is bowling a sport?</td></tr>
+      <tr><td><b>Prototype approach</b></td><td>Members are features-likely-to-be-present; categorise by similarity to the prototype.</td><td>robin as the bird prototype</td></tr>
+      <tr><td><b>Family resemblance</b></td><td>Sharing many features with other members of the category.</td><td>robin: flies, chirps, feathers, beak</td></tr>
+      <tr><td><b>Prototype</b></td><td>(1) the abstracted “average” standard; (2) the most representative member(s).</td><td>“bird” average</td></tr>
+      <tr><td><b>Exemplar approach</b></td><td>Categories are represented by stored examples, with no abstraction.</td><td>every guitar you’ve met</td></tr>
+      <tr><td><b>Correlated properties</b></td><td>Features that go together within a category.</td><td>small birds sing, large birds squawk</td></tr>
+      <tr><td><b>Economy problem</b></td><td>Storing every single encounter seems implausible.</td><td>Komatsu (1992)</td></tr>
+      <tr><td><b>Essentialist approach</b></td><td>Concepts as theories: categorisation is based on a belief about the concept’s core essence (top-down).</td><td>Medin &amp; Ortony (1989)</td></tr>
+      <tr><td><b>Bottom-up vs top-down</b></td><td>Bottom-up: build up from perceived features. Top-down: start from general knowledge and ideas.</td><td>similarity vs essence</td></tr>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h2>🕰️ Timeline of the ideas</h2>
+    <p style="color:var(--muted);margin-top:-6px">Click a point to see what happened.</p>
+    <div class="tl"><div class="tl-track" id="tlTrack"></div></div>
+    <div class="tl-info" id="tlInfo">👆 Choose a year.</div>
+  </div>
+
+  <div class="card">
+    <h2>🗺️ The lessons</h2>
+    <p style="color:var(--muted);margin-top:-6px">Click any tile to jump into that lesson. A green tick marks the ones you’ve opened.</p>
+    <div class="grid" id="tileGrid"></div>
+  </div>
+
+  <div class="card" style="background:#fbf8f1">
+    <h3>📎 Also on p. 198: the end of the face-recognition summary</h3>
+    <p style="margin:0;font-size:.92rem">The scan starts with the last lines of the previous section. Faces may be <b>“special” stimuli</b> with a dedicated brain module; others see face recognition as a case of <b>perceptual expertise</b>. Faces show strong <b>configural</b> effects. <b>Females</b> tend to be better at facial identification than males, and people recognise <b>same-culture faces</b> more readily than different-culture faces. Recognising your <b>own face</b> relies more on the <b>right hemisphere</b>. <b>Names</b> are the hardest thing to retrieve: there is a gradient from recognising that a face is familiar (easiest) to retrieving the name (hardest). Name-retrieval models propose either <b>serial</b> or <b>parallel</b> processing of person information.</p>
+  </div>
+
+  <div class="synth">
+    <div class="eyebrow">Synthesis: the whole reading in one paragraph</div>
+    <p id="synthText"></p>
+  </div>
+</section>
+
+<section class="panel" id="lessons">
+  <div class="lesson-nav" id="lessonNav"></div>
+  <div id="lessonHost"></div>
+</section>
+
+<section class="panel" id="flash">
+  <div class="eyebrow">Active recall</div>
+  <h1>Flashcards 🃏</h1>
+  <p style="color:var(--muted);margin-top:-4px">Say the answer out loud, then click to flip. Filter by topic, shuffle, or reset.</p>
+  <div class="fc-bar" id="fcFilters"></div>
+  <div class="fc-bar"><button class="btn" id="fcShuffle">🔀 Shuffle</button><button class="btn ghost" id="fcReset">↺ Reset</button><span id="fcInfo" style="color:var(--muted);font-size:.88rem"></span></div>
+  <div class="fc-grid" id="fcGrid"></div>
+</section>
+
+<section class="panel" id="mcq">
+  <div class="eyebrow">Exam practice</div>
+  <h1>Multiple-choice exam ✅</h1>
+  <p style="color:var(--muted);margin-top:-4px">Pick an answer. You’ll see straight away whether it’s right, and why.</p>
+  <div class="score"><span>Score: <b id="scoreN">0</b> / <b id="scoreT">0</b> answered</span><button class="btn ghost" id="mcqReset">↺ Restart</button></div>
+  <div id="mcqHost"></div>
+</section>
+</main>
+</div>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#34466b"/></marker>
+<marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9a96e"/></marker>
+<marker id="arrr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2544b"/></marker>
+</defs></svg>
+<script>
+const N='#34466b',G='#c9a96e',GD='#a8854a',INK='#33302b',MU='#7a7268',OK='#3f9a62',BAD='#c2544b';
+const NET={nodes:{Pet:[70,95],Canary:[150,70],Yellow:[235,40],Lemon:[340,28],Sun:[430,78],Bird:[285,115],Robin:[195,130],Cat:[55,170],Hawk:[330,185],Animal:[505,170],Breathes:[140,230],Flies:[245,255],Airplane:[365,270]},
+links:[['Pet','Canary'],['Pet','Cat'],['Canary','Yellow'],['Canary','Bird'],['Canary','Breathes'],['Canary','Flies'],['Yellow','Lemon'],['Yellow','Sun'],['Bird','Robin'],['Bird','Hawk'],['Bird','Animal'],['Bird','Breathes'],['Bird','Flies'],['Robin','Breathes'],['Robin','Flies'],['Hawk','Flies'],['Cat','Breathes'],['Cat','Animal'],['Hawk','Animal'],['Flies','Airplane'],['Breathes','Animal']]};
+function netSVG(act){act=act||{};let s='';NET.links.forEach(l=>{const a=NET.nodes[l[0]],b=NET.nodes[l[1]];s+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#b9c6dc" stroke-width="1.6"/>`});
+Object.entries(NET.nodes).forEach(([k,p])=>{const v=act[k]||0;const col=v>=1?'#c9a96e':v>0?`rgba(201,169,110,${.2+v*.7})`:'#e3ecf7';s+=`<g class="nn" data-n="${k}" style="cursor:pointer"><ellipse cx="${p[0]}" cy="${p[1]}" rx="${k.length*4.6+16}" ry="16" fill="${col}" stroke="${v>=1?GD:N}" stroke-width="${v>=1?2.5:1.2}"/><text x="${p[0]}" y="${p[1]+4.5}" text-anchor="middle" font-size="12.5" fill="${INK}" font-weight="${v>=1?700:500}">${k}</text>${v>0?`<text x="${p[0]}" y="${p[1]-20}" text-anchor="middle" font-size="10" fill="${GD}" font-weight="700">${Math.round(Math.min(v,1)*100)}%</text>`:''}</g>`});return s}
+const LESSONS=[
+/* L1 */
+{id:1,em:'🐕',title:'The Classification Problem',topic:'Networks',sub:'What makes a thing what it is? The questions that open the section',
+svg:`<svg viewBox="0 0 640 460">
+<text x="320" y="28" text-anchor="middle" class="ser" font-size="22" font-weight="700" fill="${N}">“Which one of these is not like the others?”</text>
+${[['🐕','Great Dane',70],['🐶','Jack Russell',190],['🐈','cat',310],['🐩','Dalmatian pup',430],['🐇','rabbit',550]].map((a,i)=>`<rect x="${a[2]-52}" y="50" width="104" height="104" rx="16" fill="${i==2||i==4?'#f7e4e4':'#e2f1e6'}"/><text x="${a[2]}" y="112" text-anchor="middle" font-size="44">${a[0]}</text><text x="${a[2]}" y="142" text-anchor="middle" font-size="11.5" fill="${INK}">${a[1]}</text>`).join('')}
+<rect x="18" y="168" width="604" height="28" rx="14" fill="#f6eedd"/><text x="320" y="187" text-anchor="middle" font-size="12.5" fill="${INK}">⚫⚪ black-and-white colouring would group the <tspan font-weight="700">Dalmatian with the cat</tspan>, but we don’t!</text>
+<text x="30" y="228" font-size="13" font-weight="700" fill="${N}">Within about a second, we…</text>
+<g font-size="12.5" fill="${INK}">
+<rect x="30" y="240" width="180" height="56" rx="12" fill="#e3ecf7"/><text x="120" y="263" text-anchor="middle">① see: all ANIMALS</text><text x="120" y="282" text-anchor="middle">and all MAMMALS</text>
+<line x1="212" y1="268" x2="238" y2="268" stroke="${N}" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="240" y="240" width="180" height="56" rx="12" fill="#e3ecf7"/><text x="330" y="263" text-anchor="middle">② label them: dogs,</text><text x="330" y="282" text-anchor="middle">cat, rabbit</text>
+<line x1="422" y1="268" x2="448" y2="268" stroke="${N}" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="450" y="240" width="170" height="56" rx="12" fill="#f6eedd"/><text x="535" y="263" text-anchor="middle">③ 3 very different</text><text x="535" y="282" text-anchor="middle">animals = “DOG”</text></g>
+<text x="30" y="330" font-size="13" font-weight="700" fill="${N}">The big questions of this section</text>
+<rect x="30" y="342" width="290" height="108" rx="14" fill="#fff" stroke="#e8e1d3"/>
+<text x="46" y="366" font-size="12.5" font-weight="700" fill="${GD}">A. HOW is knowledge…</text>
+<text x="46" y="388" font-size="12" fill="${INK}">acquired? stored? accessed? retrieved?</text>
+<text x="46" y="414" font-size="12" fill="${MU}">➜ a popular METAPHOR: semantic networks</text>
+<text x="46" y="432" font-size="12" fill="${MU}">(Lessons 2–3)</text>
+<rect x="330" y="342" width="290" height="108" rx="14" fill="#fff" stroke="#e8e1d3"/>
+<text x="346" y="366" font-size="12.5" font-weight="700" fill="${GD}">B. WHAT makes a thing what it is?</text>
+<text x="346" y="388" font-size="12" fill="${INK}">How is a concept (e.g., dog) defined</text>
+<text x="346" y="406" font-size="12" fill="${INK}">and organised?</text>
+<text x="346" y="432" font-size="12" fill="${MU}">➜ 4 theories of categories (Lessons 4–13)</text>
+</svg>`,
+bullets:[['🔍','Recognising objects and faces raises a bigger question: what <b>knowledge</b> does identification need, and how is it acquired, stored, accessed and retrieved?'],['🐕','The photo: we instantly see <b>animals</b> and <b>mammals</b>, then quickly label them <b>dogs, cat, mouse/rabbit</b>.'],['⚫','Why doesn’t the <b>black-and-white colouring</b> put these items in the same category? Surface looks aren’t what decides.'],['❓','What makes a Great Dane, a Jack Russell and a Dalmatian all “dog”, and different from similar-looking animals?'],['🗺️','Plan: first a <b>metaphor</b> for how knowledge is stored (semantic networks), then the basic question of how a concept is <b>defined and organised</b>.']],
+hook:'Same colour, different kind. <b>Looks don’t decide the category</b>; something deeper does.',
+friend:'“You look at a huge spotty dog and a tiny terrier and instantly call both ‘dog’, while a spotty cat is not a dog. This section asks how your brain stores that knowledge and what makes a dog a dog.”',
+gold:'Categorising is instant, yet it can’t rely on surface appearance alone. That tension drives the whole section.',
+videos:[['How do we categorize objects? Cognitive psychology','how do we categorize objects cognitive psychology concepts']],
+check:[['What two broad questions does this section address?','(1) How knowledge is acquired, stored, accessed and retrieved: the semantic-network metaphor. (2) What makes a thing what it is: how a concept like “dog” is defined and organised.'],['Why is the black-and-white colouring in the photo important?','Colour would group the Dalmatian with the cat, yet we don’t. Categorisation goes beyond surface features.']]},
+
+/* L2 */
+{id:2,em:'🕸️',title:'Semantic Networks & Verification Tasks',topic:'Networks',sub:'Knowledge as nodes and links, measured by how fast you say “true”',
+svg:`<svg viewBox="0 0 640 470">
+<text x="320" y="24" text-anchor="middle" class="ser" font-size="21" font-weight="700" fill="${N}">Figure 5.11 redrawn: a semantic network</text>
+<g transform="translate(40,20)">${netSVG({})}</g>
+<rect x="18" y="312" width="300" height="150" rx="14" fill="#e3ecf7"/>
+<text x="34" y="334" font-size="12.5" font-weight="700" fill="${N}">✅ CATEGORY verification</text>
+<text x="34" y="354" font-size="12" fill="${INK}">“A robin is a bird”</text>
+<rect x="34" y="362" width="80" height="14" rx="4" fill="${OK}"/><text x="120" y="374" font-size="11" fill="${OK}" font-weight="700">faster</text>
+<text x="34" y="396" font-size="12" fill="${INK}">“A penguin is a bird”</text>
+<rect x="34" y="404" width="150" height="14" rx="4" fill="${G}"/><text x="190" y="416" font-size="11" fill="${GD}" font-weight="700">slower</text>
+<text x="34" y="446" font-size="11" fill="${MU}">➜ robin more tightly connected to “bird”</text>
+<rect x="326" y="312" width="296" height="150" rx="14" fill="#f6eedd"/>
+<text x="342" y="334" font-size="12.5" font-weight="700" fill="${GD}">🐱 FEATURE verification</text>
+<text x="342" y="354" font-size="12" fill="${INK}">“A cat has pointy ears”</text>
+<rect x="342" y="362" width="80" height="14" rx="4" fill="${OK}"/><text x="428" y="374" font-size="11" fill="${OK}" font-weight="700">faster</text>
+<text x="342" y="396" font-size="12" fill="${INK}">“A cat has skin”</text>
+<rect x="342" y="404" width="150" height="14" rx="4" fill="${G}"/><text x="498" y="416" font-size="11" fill="${GD}" font-weight="700">slower</text>
+<text x="342" y="446" font-size="11" fill="${MU}">➜ proximity of features to “cat”</text>
+</svg>`,
+bullets:[['🕸️','<b>Semantic network</b>: knowledge is stored as an associative network. Related concepts or features are nearby <b>nodes</b>, and <b>links</b> are relationships.'],['⏱️','<b>Category verification task</b> (“A robin is a bird”) and <b>feature verification task</b> (“A cat has pointy ears”): answer as fast as possible.'],['🎯','Accuracy is near perfect, so <b>speed</b> (reaction time) is the informative dependent variable.'],['🐦','Robin verified faster than penguin ➜ robin is <b>more tightly connected</b> to “bird”. Pointy ears faster than skin ➜ <b>proximity</b> of features.'],['📏','“Close to” is <b>figurative</b>: canary is figuratively close to bird, not physically in the brain.']],
+hook:'Your knowledge is a <b>metro map</b>: stations are concepts, lines are relationships, and near stations are reached faster.',
+friend:'“Researchers time how fast you say ‘true’ to ‘a robin is a bird’. Because you’re faster for robin than for penguin, robin must sit closer to ‘bird’ in your mental web.”',
+gold:'Speed, not accuracy, reveals how knowledge is organised: faster verification means a tighter connection.',
+table:`<table><tr><th colspan="2">Method: verification tasks</th></tr><tr><td class="el">Category verification</td><td>Verify or deny “A penguin is a bird” / “A robin is a bird” as quickly as possible. Shows how categorical knowledge is accessed.</td></tr><tr><td class="el">Feature verification</td><td>Verify or deny “A cat has pointy ears” / “A cat has skin”. Shows how features are stored and accessed.</td></tr><tr><td class="el">Dependent variable</td><td>Speed (RT). Questions are easy; errors happen only when rushing.</td></tr><tr><td class="el">Findings</td><td>Robin &gt; penguin in speed; pointy ears &gt; skin.</td></tr><tr><td class="el">Interpretation</td><td>Tightness of connection and proximity of features to the concept.</td></tr></table>`,
+demo:'rtdemo',
+videos:[['Semantic networks & sentence verification','semantic network model sentence verification task reaction time']],
+check:[['Why is speed rather than accuracy the key measure?','The statements are easy, so people almost never make errors unless rushing. Speed varies and reveals how knowledge is organised.'],['What does verifying “a cat has pointy ears” faster than “a cat has skin” tell us?','Pointy ears is closer (more strongly linked) to the concept “cat” than skin is.']]},
+
+/* L3 */
+{id:3,em:'⚡',title:'Spreading Activation & Semantic Priming',topic:'Networks',sub:'Collins & Loftus (1975) and how semantic networks differ from neural networks',
+svg:`<svg viewBox="0 0 640 470">
+<text x="320" y="22" text-anchor="middle" class="ser" font-size="19" font-weight="700" fill="${N}">Prime “yellow” ➜ activation spreads to its neighbours</text>
+<g transform="translate(40,36)">${netSVG({Yellow:1,Lemon:.55,Sun:.55,Canary:.55,Bird:.25,Pet:.25,Flies:.2,Breathes:.2})}</g>
+<rect x="18" y="328" width="604" height="138" rx="14" fill="#fff" stroke="#e8e1d3"/>
+<text x="34" y="348" font-size="12.5" font-weight="700" fill="${N}">Collins &amp; Loftus’s processing assumptions</text>
+${[['① Present','node activated',''],['② Spreads','along links to','related nodes'],['③ Weakens with','time · distance ·','no. of concepts'],['④ Summed','past threshold ➜','concept activated']].map((t,i)=>`<rect x="${34+i*148}" y="358" width="136" height="62" rx="10" fill="${['#f6eedd','#e3ecf7','#f7e4e4','#e2f1e6'][i]}"/><text x="${102+i*148}" y="378" text-anchor="middle" font-size="11.5" font-weight="700" fill="${INK}">${t[0]}</text><text x="${102+i*148}" y="396" text-anchor="middle" font-size="10.5" fill="${INK}">${t[1]}</text><text x="${102+i*148}" y="411" text-anchor="middle" font-size="10.5" fill="${INK}">${t[2]}</text>`).join('')}
+<text x="34" y="440" font-size="11.5" fill="${INK}">Semantic priming: “yellow” speeds up processing of the related “lemon”.</text>
+<text x="34" y="457" font-size="11.5" fill="${MU}">“The more concepts are activated, the less activation any one concept receives.”</text>
+</svg>`,
+bullets:[['⚡','<b>Spreading activation model</b> (Collins &amp; Loftus, 1975): concept nodes are linked in an associative network. Presenting a concept activates its node, and activation spreads to related nodes.'],['🔗','Links carry many relationships: <b>category membership</b> (canary–bird), <b>property</b> (yellow–canary) and subtle ones (canary–cat, through “pet”).'],['📉','Activation <b>decreases</b> with time, distance and the number of concepts activated. It is <b>summed</b> at each node, and past a <b>threshold</b> the concept is activated.'],['🍋','<b>Semantic priming</b>: “yellow” activates sun, canary and lemon, giving them a head start, so “lemon” is verified as a word faster.'],['🧠','Semantic networks ≠ <b>neural networks</b>: semantic nodes ARE specific concepts; neural nodes are neuron-like and distributed. Both use <b>excitatory connections</b> to explain activation.']],
+hook:'Drop a pebble (“yellow”) in a pond: the <b>ripples</b> reach lemon and sun first and fade with distance.',
+friend:'“When you hear ‘yellow’, your brain half-wakes related ideas like lemon and sun. If ‘lemon’ comes next, you recognise it faster because it was already warmed up. That’s priming.”',
+gold:'Activation spreads from a primed node to its neighbours, giving related concepts a head start toward threshold. That is semantic priming.',
+table:`<table><tr><th></th><th>Semantic network</th><th>Neural network</th></tr><tr><td class="el">Nodes are…</td><td>specific concepts (“canary”)</td><td>like neurons; no “canary” neuron</td></tr><tr><td class="el">Links are…</td><td>meaningful relationships (canary–pet)</td><td>interconnections between neurons, not dedicated to words</td></tr><tr><td class="el">Based on the brain?</td><td>No, a metaphor</td><td>Loosely modelled on brain structure</td></tr><tr><td class="el">Retrieval</td><td>traversing nodes along links</td><td>activation/inhibition of nodes or networks</td></tr><tr><td class="el">Shared idea</td><td colspan="2">Excitatory connections explain knowledge activation (“kindred theoretical spirits”)</td></tr></table>
+<table><tr><th colspan="2">Model: Collins &amp; Loftus (1975) spreading activation</th></tr><tr><td class="el">Core assumption</td><td>Concept nodes linked in an associative network</td></tr><tr><td class="el">Processing</td><td>Activation spreads; decreases with time, distance, number activated; summed; threshold</td></tr><tr><td class="el">Explains</td><td>Semantic priming (introduced in Ch. 2)</td></tr><tr><td class="el">Legacy</td><td>Associative networks are part of many influential accounts of knowledge and cognition</td></tr></table>`,
+demo:'spreaddemo',
+videos:[['Spreading activation — Collins & Loftus','Collins Loftus 1975 spreading activation model semantic priming']],
+check:[['List the processing assumptions of the spreading activation model.','Presenting a concept activates its node; activation spreads to related nodes; it decreases with time, distance and number of concepts activated; activation is summed and the concept is activated past a threshold.'],['How does the model explain semantic priming?','The prime (yellow) spreads activation to related nodes (lemon), which move closer to threshold, so they are recognised faster.'],['Give one difference and one similarity between semantic and neural networks.','Difference: semantic nodes represent specific concepts, while neural nodes are neuron-like and not tied to words. Similarity: both rely on excitatory connections for activation.']]},
+
+/* L4 */
+{id:4,em:'🧱',title:'Functions of Concepts',topic:'Concepts',sub:'“Concepts are the building blocks of thought” (Solomon, Medin & Lynch, 1999)',
+svg:`<svg viewBox="0 0 640 470">
+<text x="320" y="26" text-anchor="middle" class="ser" font-size="21" font-weight="700" fill="${N}">One label ➜ four jobs (Medin &amp; Rips, 2005)</text>
+${[['🧠 UNDERSTANDING','mental shorthand: real people, competition,','prize money, embarrassment, colour TV',155,95,'#e3ecf7'],['🔮 PREDICTION','don’t like reality shows? ➜ you','can predict you won’t like this one',485,95,'#f6eedd'],['📚 LEARNING','a new category: reality shows didn’t','exist 20 years ago; now everyone knows',155,360,'#e2f1e6'],['💬 COMMUNICATION','“restaurant coffee” (weak) vs','“real coffee” (coffee-shop jolt)',485,360,'#ece6f6']].map(b=>`<line x1="320" y1="225" x2="${b[3]}" y2="${b[4]}" stroke="${G}" stroke-width="2.5"/><rect x="${b[3]-145}" y="${b[4]-42}" width="290" height="84" rx="14" fill="${b[5]}" stroke="#d7cfbf"/><text x="${b[3]}" y="${b[4]-14}" text-anchor="middle" font-size="13" font-weight="700" fill="${N}">${b[0]}</text><text x="${b[3]}" y="${b[4]+8}" text-anchor="middle" font-size="11.5" fill="${INK}">${b[1]}</text><text x="${b[3]}" y="${b[4]+25}" text-anchor="middle" font-size="11.5" fill="${INK}">${b[2]}</text>`).join('')}
+<circle cx="320" cy="225" r="72" fill="${G}"/><text x="320" y="215" text-anchor="middle" font-size="34">📺</text><text x="320" y="245" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">“REALITY SHOW”</text>
+<text x="320" y="455" text-anchor="middle" font-size="11.5" fill="${MU}">Concepts go far beyond labels for grouping things: they let us infer knowledge not explicitly stated</text>
+</svg>`,
+bullets:[['🧱','“Concepts are the <b>building blocks of thought</b>” (Solomon, Medin &amp; Lynch, 1999). They do far more than label groups.'],['🧠','<b>Understanding</b>: a mental shorthand. “Reality show” instantly evokes real people, competition, prize money, embarrassment…'],['🔮','<b>Prediction</b>: go beyond the present. If you dislike reality shows, you can predict you’ll dislike this one.'],['📚','<b>Learning</b>: concepts support new learning. Reality shows weren’t a category 20 years ago; now everyone knows one.'],['💬','<b>Communication</b>: we combine concepts via language, e.g. “restaurant coffee” vs “real coffee”. Concepts are subtle and complex.']],
+hook:'A concept is a <b>zip file</b>: one word unpacks into understanding, predictions, learning and conversation.',
+friend:'“If a friend says ‘it’s a reality show’, you already know loads without being told, like real people and a prize. Concepts let you understand, predict, learn new things and talk efficiently.”',
+gold:'Our knowledge of concepts allows us to infer knowledge that is not explicitly stated.',
+table:`<table><tr><th>Function</th><th>What it means</th><th>Textbook example</th></tr><tr><td class="el">Understanding</td><td>quick, efficient mental shorthand</td><td>“reality show” evokes many features</td></tr><tr><td class="el">Prediction</td><td>go beyond the present moment</td><td>you won’t like this reality show</td></tr><tr><td class="el">Learning</td><td>support new learning</td><td>reality shows as a new category</td></tr><tr><td class="el">Communication</td><td>combine concepts via language</td><td>restaurant coffee vs real coffee</td></tr></table><p style="font-size:.85rem;color:var(--muted)">The section also asks: what makes Monopoly, dodge ball and hopscotch all <i>games</i>, despite their very different characteristics? (See Lesson 7.)</p>`,
+videos:[['Why concepts matter — functions of concepts','functions of concepts cognitive psychology categorization inference']],
+check:[['Name the four functions of concepts with an example each.','Understanding (reality show evokes features), prediction (you won’t like it), learning (new category of reality shows), communication (restaurant vs real coffee).'],['Who said “concepts are the building blocks of thought”?','Solomon, Medin & Lynch (1999). Medin & Rips (2005) reviewed the functions.']]},
+
+/* L5 */
+{id:5,em:'🗃️',title:'Categories as a Concept: Types of Categories',topic:'Concepts',sub:'Goldstone & Kersten (2003): ordered by how similar members are',
+svg:`<svg viewBox="0 0 640 470">
+<text x="320" y="26" text-anchor="middle" class="ser" font-size="21" font-weight="700" fill="${N}">Similarity among members: high ➜ low</text>
+<defs><linearGradient id="sim" x1="0" x2="1"><stop offset="0" stop-color="#3f9a62"/><stop offset=".5" stop-color="#c9a96e"/><stop offset="1" stop-color="#c2544b"/></linearGradient></defs>
+<rect x="30" y="48" width="580" height="16" rx="8" fill="url(#sim)"/>
+<text x="30" y="84" font-size="11" fill="${OK}" font-weight="700">members very similar</text><text x="610" y="84" text-anchor="end" font-size="11" fill="${BAD}" font-weight="700">almost nothing in common</text>
+${[['🌸','NATURAL KINDS','(natural categories)','occur naturally;','“define themselves”','rose · daisy','labelled after discovery','#e2f1e6',30],['🛠️','ARTIFACTS','(artifact categories)','designed by humans','for functions','soccer · cross-country','hang together less well','#f6eedd',175],['🧳','AD HOC','(Barsalou, 1983)','formed “on the fly”','for a goal','suitcase, swimsuit,','camera, book','#fbe9d9',320],['⛓️','METAPHORICAL','','different situations,','one theme','“emotional prison”:','job · relationship · secret','#f7e4e4',465]].map(c=>`<rect x="${c[8]}" y="100" width="140" height="250" rx="16" fill="${c[7]}"/><text x="${c[8]+70}" y="148" text-anchor="middle" font-size="36">${c[0]}</text><text x="${c[8]+70}" y="180" text-anchor="middle" font-size="12.5" font-weight="700" fill="${N}">${c[1]}</text><text x="${c[8]+70}" y="197" text-anchor="middle" font-size="10.5" fill="${MU}">${c[2]}</text><text x="${c[8]+70}" y="228" text-anchor="middle" font-size="11.5" fill="${INK}">${c[3]}</text><text x="${c[8]+70}" y="245" text-anchor="middle" font-size="11.5" fill="${INK}">${c[4]}</text><text x="${c[8]+70}" y="285" text-anchor="middle" font-size="11.5" font-weight="700" fill="${INK}">${c[5]}</text><text x="${c[8]+70}" y="302" text-anchor="middle" font-size="11" fill="${INK}">${c[6]}</text>`).join('')}
+<line x1="30" y1="372" x2="610" y2="372" stroke="${N}" stroke-width="2" marker-end="url(#arr)"/>
+<text x="320" y="392" text-anchor="middle" font-size="11.5" fill="${N}" font-weight="700">looser and looser association, but an underlying concept is still there</text>
+<rect x="30" y="406" width="580" height="54" rx="12" fill="#fff" stroke="${G}"/>
+<text x="46" y="428" font-size="12" fill="${INK}"><tspan font-weight="700">Ad hoc still works:</tspan> people in one culture answer “things to take on vacation” consistently,</text>
+<text x="46" y="446" font-size="12" fill="${INK}">and members even vary in typicality (swimsuit typical; deck of cards less so).</text>
+</svg>`,
+bullets:[['🗃️','Categories themselves are an organising concept: there are <b>types of categories</b>, just as there are types of dogs (Medin, Lynch &amp; Solomon, 2000).'],['🌸','<b>Natural kinds</b> (natural categories): occur naturally and share basic features, e.g. flowers. They are labelled only after discovery (Medin &amp; Heit, 1999).'],['🛠️','<b>Artifacts</b>: designed for functions (tools, sports, furniture). Soccer and cross-country hang together less well than rose and daisy.'],['🧳','<b>Ad hoc</b> (Barsalou, 1983): formed on the fly for a goal (“things to take on vacation”), with low similarity yet consistent responses within a culture.'],['⛓️','<b>Metaphorical concepts</b>: least coherent. An “emotional prison” can be a job, a relationship or a dark secret, united by a common theme.']],
+hook:'From a <b>family</b> (natural kind), to a <b>team</b> (artifact), to a <b>packing list</b> (ad hoc), to a <b>poem</b> (metaphor): less and less alike each step.',
+friend:'“Some categories are natural, like flowers, whose members really look alike. Others are made by us for a purpose, like sports. Some we invent on the spot, like things to pack. The looser they get, the less the members resemble each other.”',
+gold:'Categories can be ordered by how similar their members are, from natural kinds down to metaphorical concepts, yet each still has an underlying concept.',
+table:`<table><tr><th>Type</th><th>Also called / source</th><th>Member similarity</th><th>Example</th></tr><tr><td class="el">Natural kinds</td><td>natural categories; Medin &amp; Heit (1999)</td><td>High</td><td>flower (rose, daisy)</td></tr><tr><td class="el">Artifacts</td><td>artifact categories</td><td>Lower</td><td>sport (soccer, cross-country)</td></tr><tr><td class="el">Ad hoc</td><td>Barsalou (1983)</td><td>Very low</td><td>things to take on vacation</td></tr><tr><td class="el">Metaphorical</td><td>—</td><td>Least coherent</td><td>emotional prison</td></tr></table>`,
+demo:'sortdemo',
+videos:[['Ad hoc categories — Barsalou','Barsalou ad hoc categories goal derived']],
+check:[['Order the four category types by member similarity (Goldstone & Kersten, 2003).','Natural kinds > artifacts > ad hoc > metaphorical.'],['Why is “things to take on vacation” an ad hoc category, and what shows it is still real?','It is formed for a goal. People within a culture give consistent answers, and its members even vary in typicality.']]},
+
+/* L6 */
+{id:6,em:'📐',title:'Similarity-Based Categorization & the Classical View',topic:'Classical',sub:'Bruner, Goodnow & Austin (1956): necessary and sufficient features',
+svg:`<svg viewBox="0 0 640 470">
+<text x="320" y="26" text-anchor="middle" class="ser" font-size="21" font-weight="700" fill="${N}">Similarity-based = compare the target to a STANDARD in memory</text>
+<rect x="250" y="44" width="140" height="56" rx="14" fill="#f6eedd" stroke="${G}"/><text x="320" y="68" text-anchor="middle" font-size="24">❓</text><text x="320" y="90" text-anchor="middle" font-size="11.5" fill="${INK}">target object</text>
+${[['CLASSICAL','a clearly specified','set of features',110,'#e3ecf7'],['PROTOTYPE','an abstracted','“best example”',320,'#e2f1e6'],['EXEMPLAR','all the other','members',530,'#ece6f6']].map(s=>`<line x1="320" y1="100" x2="${s[3]}" y2="128" stroke="${N}" stroke-width="2" marker-end="url(#arr)"/><rect x="${s[3]-95}" y="130" width="190" height="72" rx="12" fill="${s[4]}"/><text x="${s[3]}" y="152" text-anchor="middle" font-size="12.5" font-weight="700" fill="${N}">${s[0]}</text><text x="${s[3]}" y="172" text-anchor="middle" font-size="11.5" fill="${INK}">${s[1]}</text><text x="${s[3]}" y="189" text-anchor="middle" font-size="11.5" fill="${INK}">${s[2]}</text>`).join('')}
+<text x="320" y="232" text-anchor="middle" class="ser" font-size="18" font-weight="700" fill="${N}">The classical view: TRIANGLE</text>
+<polygon points="110,400 190,270 270,400" fill="#e3ecf7" stroke="${N}" stroke-width="2.5"/>
+<text x="190" y="385" text-anchor="middle" font-size="11" fill="${N}">∠ sum = 180°</text>
+<rect x="300" y="256" width="320" height="150" rx="14" fill="#fff" stroke="#e8e1d3"/>
+<text x="316" y="280" font-size="12.5" font-weight="700" fill="${N}">Defining features (necessary + sufficient)</text>
+<text x="316" y="304" font-size="12" fill="${INK}">✓ closed figure</text><text x="316" y="324" font-size="12" fill="${INK}">✓ three sides</text><text x="316" y="344" font-size="12" fill="${INK}">✓ angles sum to 180°</text>
+<text x="316" y="372" font-size="12" fill="${OK}" font-weight="700">All present ➜ triangle. Any missing ➜ NOT.</text>
+<text x="316" y="392" font-size="11" fill="${MU}">= is the entity similar to the defining set?</text>
+<text x="320" y="440" text-anchor="middle" font-size="12" fill="${INK}">Earliest, most straightforward account; works best for <tspan font-weight="700">clearly defined</tspan> concepts</text>
+</svg>`,
+bullets:[['⚖️','<b>Similarity-based approaches</b>: categorisation = judging similarity between the target and a <b>standard in long-term memory</b>.'],['🔀','That standard can be (1) a clearly specified <b>set of features</b>, (2) an abstracted <b>“best example”</b>, or (3) <b>all the other members</b>. These are the classical, prototype and exemplar views.'],['📐','<b>Classical view</b> (e.g., Bruner, Goodnow &amp; Austin, 1956): items belong if they have certain features that are both <b>necessary and sufficient</b> for defining the concept.'],['🔺','Triangle: a closed, three-sided figure whose angles sum to 180°. Shapes with these are triangles; shapes without are not.'],['🧮','It is similarity-based because membership depends on whether the entity’s features match the <b>defining features</b>.']],
+hook:'The classical view is a <b>password</b>: type every character correctly and you’re in; one wrong and you’re out.',
+friend:'“All the ‘similarity’ theories compare a new thing to something stored in memory. The oldest says each category has a checklist, like a triangle: closed, three sides, 180°. Tick them all and you’re in.”',
+gold:'The classical view defines a concept by features that are both necessary and sufficient.',
+videos:[['Classical view of concepts','classical view of concepts necessary sufficient features Bruner']],
+check:[['What are the three possible “standards” in similarity-based approaches, and which theory matches each?','A clearly specified set of features (classical), an abstracted best example (prototype), all other members (exemplar).'],['Why does the triangle fit the classical view so well?','It has clear defining features (closed, three sides, angles sum to 180°) that are necessary and sufficient.']]},
+
+/* L7 */
+{id:7,em:'💥',title:'Three Problems with the Classical View',topic:'Classical',sub:'Undefinable features · graded structure · fuzzy boundaries',
+svg:`<svg viewBox="0 0 640 470">
+<text x="320" y="26" text-anchor="middle" class="ser" font-size="21" font-weight="700" fill="${N}">Three cracks in the classical view</text>
+<rect x="18" y="44" width="196" height="410" rx="16" fill="#f7e4e4"/>
+<text x="116" y="70" text-anchor="middle" font-size="13" font-weight="700" fill="${BAD}">① NO DEFINING SET</text>
+<text x="116" y="88" text-anchor="middle" font-size="11" fill="${MU}">(most significant criticism)</text>
+<text x="116" y="130" text-anchor="middle" font-size="30">🎲 ⚽ 🦘</text>
+<text x="116" y="160" text-anchor="middle" font-size="11.5" fill="${INK}">Monopoly · dodge ball</text><text x="116" y="176" text-anchor="middle" font-size="11.5" fill="${INK}">· hopscotch</text>
+<text x="116" y="210" text-anchor="middle" font-size="12" font-weight="700" fill="${N}">What is common</text><text x="116" y="226" text-anchor="middle" font-size="12" font-weight="700" fill="${N}">to all “games”?</text>
+<text x="116" y="262" text-anchor="middle" font-size="11" fill="${INK}">board? ball? scoring?</text><text x="116" y="278" text-anchor="middle" font-size="11" fill="${INK}">competition? each</text><text x="116" y="294" text-anchor="middle" font-size="11" fill="${INK}">fails for some game</text>
+<text x="116" y="340" text-anchor="middle" font-size="34">🤷</text>
+<text x="116" y="380" text-anchor="middle" font-size="11" fill="${MU}">very hard to specify many</text><text x="116" y="396" text-anchor="middle" font-size="11" fill="${MU}">concepts by necessary +</text><text x="116" y="412" text-anchor="middle" font-size="11" fill="${MU}">sufficient features</text>
+<rect x="222" y="44" width="196" height="410" rx="16" fill="#f6eedd"/>
+<text x="320" y="70" text-anchor="middle" font-size="13" font-weight="700" fill="${GD}">② GRADED STRUCTURE</text>
+<text x="320" y="88" text-anchor="middle" font-size="11" fill="${MU}">the typicality effect</text>
+<text x="238" y="114" font-size="11.5" font-weight="700" fill="${N}">“Name a furniture item”</text>
+${[['table',150],['chair',140],['couch',120],['lamp',70],['rug',35]].map((f,i)=>`<text x="238" y="${140+i*24}" font-size="11.5" fill="${INK}">${f[0]}</text><rect x="285" y="${130+i*24}" width="${f[1]*.8}" height="13" rx="3" fill="${i<3?G:'#e4d6b6'}"/>`).join('')}
+<text x="238" y="276" font-size="9.5" fill="${MU}">(illustrative bars)</text>
+<text x="238" y="306" font-size="11.5" font-weight="700" fill="${N}">Even ad hoc categories:</text>
+<text x="238" y="324" font-size="11.5" fill="${INK}">🩱 swimsuit: typical</text><text x="238" y="342" font-size="11.5" fill="${INK}">🃏 deck of cards: less</text>
+<text x="238" y="374" font-size="11" fill="${INK}">Rosch (1973); Rosch &amp;</text><text x="238" y="390" font-size="11" fill="${INK}">Mervis (1975): huge agree-</text><text x="238" y="406" font-size="11" fill="${INK}">ment on typicality</text>
+<text x="238" y="436" font-size="10.5" fill="${BAD}" font-weight="700">Classical: all equal ✗</text>
+<rect x="426" y="44" width="196" height="410" rx="16" fill="#e3ecf7"/>
+<text x="524" y="70" text-anchor="middle" font-size="13" font-weight="700" fill="${N}">③ FUZZY BOUNDARIES</text>
+<text x="524" y="88" text-anchor="middle" font-size="11" fill="${MU}">no absolute, clear-cut edges</text>
+<circle cx="480" cy="190" r="48" fill="#fff" stroke="${N}" stroke-dasharray="5 4"/><text x="480" y="186" text-anchor="middle" font-size="11" font-weight="700" fill="${N}">GAME</text>
+<circle cx="568" cy="190" r="48" fill="#fff" stroke="${OK}" stroke-dasharray="5 4"/><text x="568" y="186" text-anchor="middle" font-size="11" font-weight="700" fill="${OK}">SPORT</text>
+<text x="524" y="206" text-anchor="middle" font-size="24">🎳</text>
+<text x="524" y="264" text-anchor="middle" font-size="12" font-weight="700" fill="${INK}">Is bowling a sport?</text>
+<text x="524" y="284" text-anchor="middle" font-size="11" fill="${INK}">class vote ➜ always a split</text>
+<text x="442" y="316" font-size="11" fill="${OK}">✓ coordinated movements</text><text x="442" y="334" font-size="11" fill="${OK}">✓ on the sports channel</text><text x="442" y="352" font-size="11" fill="${BAD}">? but only “sort of”</text>
+<text x="524" y="392" text-anchor="middle" font-size="11" fill="${INK}">Classical view: sport or not.</text><text x="524" y="408" text-anchor="middle" font-size="11" fill="${INK}">No room for “sort of” ✗</text>
+</svg>`,
+bullets:[['🎲','<b>Problem 1</b> (the most significant, at the very core): many concepts can’t be specified by necessary and sufficient features. What do Monopoly, dodge ball and hopscotch share that makes them all <b>games</b>?'],['🪑','<b>Problem 2: graded structure.</b> Not all members are equal. Asked for furniture, people say table, chair, couch. This is the <b>typicality effect</b>, and the classical view can’t explain it.'],['🩱','Even <b>ad hoc</b> categories vary in typicality (swimsuit vs deck of cards). People agree strongly on typicality (Rosch, 1973; Rosch &amp; Mervis, 1975).'],['🎳','<b>Problem 3: fuzzy boundaries.</b> The classical view implies absolute, clear-cut boundaries, yet students always split on whether bowling is a sport.'],['🚫','The classical view allows no “sort of” membership: it’s a sport or it isn’t. That fails to capture many everyday categories.']],
+hook:'<b>G-T-F</b>: <b>G</b>ames can’t be defined, <b>T</b>ypicality exists, and boundaries are <b>F</b>uzzy.',
+friend:'“The checklist idea breaks three ways. Try listing what all games share, and you can’t. Some members feel more typical, like a table being more ‘furniture’ than a rug. And some cases, like bowling as a sport, are just ‘sort of’.”',
+gold:'The classical view has no mechanism for why some members are more “furniture-y” than others, and no room for “sort of” members.',
+table:`<table><tr><th>Problem</th><th>What the classical view predicts</th><th>What actually happens</th><th>Example</th></tr><tr><td class="el">1. Defining features</td><td>Every concept has a necessary + sufficient set</td><td>Very hard to find for many concepts</td><td>game</td></tr><tr><td class="el">2. Graded structure</td><td>All members equal</td><td>Typicality effect; strong agreement</td><td>table/chair/couch; swimsuit vs cards</td></tr><tr><td class="el">3. Fuzzy boundaries</td><td>Absolute, clear-cut edges</td><td>“Sort of” members; disagreement</td><td>bowling: sport?</td></tr></table>`,
+demo:'sportdemo',
+videos:[['Wittgenstein games family resemblance','Wittgenstein game family resemblance concept']],
+check:[['What is the most significant criticism of the classical view?','Many concepts can’t be specified by features that are both necessary and sufficient, e.g. “game”.'],['What is graded structure and why can’t the classical view handle it?','Some members are better examples than others (the typicality effect). Under the classical view, having the defining features makes all members equal members.'],['How does bowling illustrate fuzzy boundaries?','It is “sort of” a sport. Students always split, but the classical view allows only in or out.']]},
+
+/* L8 */
+{id:8,em:'⭐',title:'The Prototype Approach',topic:'Prototype',sub:'Family resemblance, and how it solves all three classical problems',
+svg:`<svg viewBox="0 0 640 470">
+<text x="320" y="26" text-anchor="middle" class="ser" font-size="21" font-weight="700" fill="${N}">Typical BIRD features: flies · chirps · feathers · beak</text>
+${[['🐦 robin',[1,1,1,1],OK,'4/4 ➜ typical'],['🐧 penguin',[0,0,1,1],BAD,'2/4 ➜ an aberration']].map((b,r)=>`<text x="30" y="${88+r*62}" font-size="15" font-weight="700" fill="${INK}">${b[0]}</text>${['flies','chirps','feathers','beak'].map((f,i)=>`<rect x="${150+i*80}" y="${66+r*62}" width="70" height="34" rx="9" fill="${b[1][i]?'#e2f1e6':'#f7e4e4'}"/><text x="${185+i*80}" y="${88+r*62}" text-anchor="middle" font-size="11.5" fill="${INK}">${b[1][i]?'✓':'✗'} ${f}</text>`).join('')}<text x="480" y="${88+r*62}" font-size="12" font-weight="700" fill="${b[2]}">${b[3]}</text>`).join('')}
+<text x="320" y="182" text-anchor="middle" font-size="11.5" fill="${MU}">Features members are LIKELY to have, not features they MUST have</text>
+<text x="160" y="214" text-anchor="middle" class="ser" font-size="17" font-weight="700" fill="${N}">Fuzzy boundary, solved</text>
+<circle cx="95" cy="320" r="72" fill="#e3ecf7"/><circle cx="225" cy="320" r="72" fill="#e2f1e6"/>
+<text x="75" y="316" font-size="24">⭐</text><text x="70" y="340" font-size="11" fill="${N}" font-weight="700">GAME</text><text x="230" y="316" font-size="24">⭐</text><text x="222" y="340" font-size="11" fill="${OK}" font-weight="700">SPORT</text>
+<text x="160" y="328" text-anchor="middle" font-size="22">🎳</text>
+<line x1="98" y1="360" x2="148" y2="360" stroke="${N}" marker-start="url(#arr)" marker-end="url(#arr)"/><line x1="172" y1="360" x2="222" y2="360" stroke="${N}" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="160" y="416" text-anchor="middle" font-size="11" fill="${INK}">bowling ≈ equidistant from both</text><text x="160" y="432" text-anchor="middle" font-size="11" fill="${INK}">prototypes ➜ hard to classify</text>
+<rect x="330" y="200" width="292" height="250" rx="14" fill="#fff" stroke="#e8e1d3"/>
+<text x="476" y="224" text-anchor="middle" font-size="12.5" font-weight="700" fill="${N}">How a prototype forms</text>
+<text x="346" y="252" font-size="22">🐦🐦🐤🦅🐦🐧🐦</text>
+<text x="346" y="276" font-size="11.5" fill="${INK}">repeated encounters with birds</text>
+<line x1="476" y1="286" x2="476" y2="312" stroke="${N}" stroke-width="2" marker-end="url(#arr)"/>
+<text x="476" y="332" text-anchor="middle" font-size="11.5" fill="${INK}">ABSTRACT the features seen most often:</text>
+<text x="476" y="352" text-anchor="middle" font-size="11.5" fill="${INK}">smallish · flies · builds nests · feathers</text>
+<text x="476" y="386" text-anchor="middle" font-size="28">⭐</text>
+<text x="476" y="416" text-anchor="middle" font-size="12" font-weight="700" fill="${GD}">membership = similarity to prototype</text>
+<text x="476" y="436" text-anchor="middle" font-size="10.5" fill="${MU}">(the prototype approach is similarity based)</text>
+</svg>`,
+bullets:[['⭐','<b>Prototype approach</b>: rather than must-have features, categories have features that members are <b>likely</b> to have. Instances are judged by <b>resemblance</b> to other members.'],['👪','High <b>family resemblance</b> (sharing many features with other members) ➜ typical members, which become the standard: the <b>prototype</b>. Low resemblance ➜ less typical.'],['🐦','Robin has all 4 typical bird features (flies, chirps, feathers, beak); penguin has 2, an aberration. <b>Membership = similarity to the prototype.</b>'],['✅','Solves all 3 problems: no need for a defining set; typicality is its <b>very basis</b>; fuzzy boundaries are expected (bowling ≈ equidistant from the game and sport prototypes).'],['🔁','Prototypes are <b>abstracted</b> through repeated experience: after many birds, “bird” = smallish, flies, builds nests, feathers.']],
+hook:'The prototype is the <b>“bird emoji” in your head</b>: an average of every bird you’ve seen.',
+friend:'“Instead of a strict checklist, your brain builds an average bird from all the birds you’ve seen. Robins look a lot like that average, so they feel very ‘bird’. Penguins don’t. Things halfway between two averages, like bowling, feel unclear.”',
+gold:'Typicality is not a problem for the prototype approach; it is the very basis of it.',
+table:`<table><tr><th>Classical problem</th><th>How the prototype approach solves it</th></tr><tr><td class="el">No defining features</td><td>Only features that tend to be present are needed</td></tr><tr><td class="el">Graded structure</td><td>Typicality = degree of similarity to the prototype; it is the basis of the approach</td></tr><tr><td class="el">Fuzzy boundaries</td><td>Items between prototypes (bowling) are naturally hard to classify</td></tr></table>`,
+videos:[['Prototype theory — Eleanor Rosch','prototype theory Eleanor Rosch family resemblance']],
+check:[['How does family resemblance determine typicality?','Instances sharing many features with other members are typical and serve as the prototype; those with low family resemblance are less typical.'],['Explain how the prototype approach handles bowling.','Bowling lies about equidistant from the game and sport prototypes, so it is hard to classify. The boundary is naturally fuzzy.']]},
+
+/* L9 */
+{id:9,em:'⚫',title:'Prototype Formation: Posner et al. (1967)',topic:'Prototype',sub:'Recognising a pattern you never saw',
+svg:`<svg viewBox="0 0 640 470">
+<text x="320" y="26" text-anchor="middle" class="ser" font-size="21" font-weight="700" fill="${N}">The dot-pattern study (Figure 5.12)</text>
+${(()=>{const tri=[[50,15],[35,40],[65,40],[20,65],[50,65],[80,65],[5,90],[95,90],[50,90]];const jit=(p,a,seed)=>p.map((q,i)=>[q[0]+Math.sin(seed*7+i*3.1)*a,q[1]+Math.cos(seed*5+i*2.3)*a]);
+const box=(x,y,pts,lab,col,dash)=>`<rect x="${x}" y="${y}" width="110" height="110" rx="10" fill="#fff" stroke="${col}" stroke-width="2" ${dash?'stroke-dasharray="5 4"':''}/>`+pts.map(p=>`<circle cx="${x+5+p[0]}" cy="${y+8+p[1]}" r="4" fill="${N}"/>`).join('')+`<text x="${x+55}" y="${y+128}" text-anchor="middle" font-size="11" fill="${INK}">${lab}</text>`;
+let s=`<text x="30" y="58" font-size="12.5" font-weight="700" fill="${N}">① STUDY: only distortions shown</text>`;
+[0,1,2].forEach(i=>s+=box(30+i*125,68,jit(tri,7,i+1),'distortion '+(i+1),'#e8e1d3'));
+s+=`<text x="420" y="58" font-size="12.5" font-weight="700" fill="${BAD}">never shown:</text>`+box(420,68,tri,'PROTOTYPE (never seen)',BAD,true);
+s+=`<text x="30" y="244" font-size="12.5" font-weight="700" fill="${N}">② TEST: “Have you seen this before?”</text>`;return s})()}
+<text x="30" y="272" font-size="11" fill="${MU}">% saying “seen it”, pattern only; bars are illustrative of the reported direction, not the original data</text>
+${[['old (studied)',.8,G,'yes, correctly'],['PROTOTYPE (new!)',.85,BAD,'confidently “yes”!'],['other new pattern',.3,'#9fb3d4','much less likely']].map((b,i)=>`<text x="30" y="${306+i*34}" font-size="12" fill="${INK}" font-weight="${i==1?700:400}">${b[0]}</text><rect x="170" y="${294+i*34}" width="${b[1]*300}" height="18" rx="4" fill="${b[2]}"/><text x="${178+b[1]*300}" y="${307+i*34}" font-size="11" fill="${MU}">${b[3]}</text>`).join('')}
+<rect x="30" y="398" width="580" height="60" rx="12" fill="#f6eedd"/>
+<text x="46" y="422" font-size="12" fill="${INK}">Later, the prototype (tested once) was recognised <tspan font-weight="700">as well as old patterns</tspan>,</text>
+<text x="46" y="442" font-size="12" fill="${INK}">as if seen repeatedly ➜ participants ABSTRACTED the average of the patterns.</text>
+</svg>`,
+bullets:[['⚫','<b>Posner, Goldsmith &amp; Welton (1967)</b> studied <b>prototype formation</b> with dot patterns (e.g., a triangle, M, F, random).'],['🎲','Participants saw statistically generated <b>distortions</b> of a prototype. The <b>prototype itself was never presented</b>.'],['🧪','Test: old and new patterns ➜ “Have you seen this before?”'],['😲','Most compelling result: people <b>confidently said they had seen the prototype</b>, far less often for other new patterns. Later the prototype was recognised <b>as well as old patterns</b>.'],['🧠','Interpretation: during the study phase they were <b>abstracting a prototype</b>, the average of all the patterns they saw.']],
+hook:'Your brain made a <b>composite photo</b> of patterns it had seen, then “remembered” the composite.',
+friend:'“People saw messy versions of a dot triangle but never the perfect one. Later they swore they had seen the perfect triangle. Their brain had quietly averaged the messy ones into a prototype.”',
+gold:'Participants recognised a prototype they had never seen, as if it had been presented repeatedly. Strong evidence that we abstract prototypes.',
+table:`<table><tr><th colspan="2">Study: Posner, Goldsmith &amp; Welton (1967)</th></tr><tr><td class="el">Question</td><td>How are prototypes formed?</td></tr><tr><td class="el">Stimuli</td><td>Dot patterns (triangle, M, F, random). Studied items were statistical distortions of a prototype.</td></tr><tr><td class="el">Method</td><td>Study distortions only; test with old and new patterns (including the prototype): seen before?</td></tr><tr><td class="el">Findings</td><td>Prototype confidently “recognised” though never seen; other new patterns much less so. Later the prototype was recognised as well as old patterns.</td></tr><tr><td class="el">Conclusion</td><td>People abstract a prototype, the average of the patterns observed.</td></tr><tr><td class="el">Later reused</td><td>As a problem for the exemplar approach (Lesson 12)</td></tr></table>`,
+demo:'dotdemo',
+videos:[['Posner & Keele dot pattern prototype','Posner dot pattern prototype abstraction experiment']],
+check:[['What was unusual about the prototype in Posner et al. (1967)?','It was never presented during study; only distortions of it were shown.'],['What is the key finding and what does it show?','People confidently claimed to have seen the prototype, and later recognised it as well as studied patterns. They had abstracted an average prototype.']]},
+
+/* L10 */
+{id:10,em:'🎸',title:'Prototype Advantages & Problems',topic:'Prototype',sub:'Great description, weaker explanation: correlations, context, conjunctions',
+svg:`<svg viewBox="0 0 640 470">
+<text x="320" y="26" text-anchor="middle" class="ser" font-size="21" font-weight="700" fill="${N}">“Prototype”: good description, weak explanation</text>
+<rect x="18" y="42" width="604" height="96" rx="14" fill="#e2f1e6"/>
+<text x="34" y="64" font-size="12.5" font-weight="700" fill="${OK}">✓ Prototype members (the most representative) get processing advantages:</text>
+<text x="34" y="88" font-size="12" fill="${INK}">⚡ accessed more quickly from memory   📚 learned more quickly</text>
+<text x="34" y="110" font-size="12" fill="${INK}">🔔 primed more by the category name   🕸️ short distance to the label</text>
+<text x="34" y="128" font-size="10.5" fill="${MU}">“prototype” = (1) the abstracted representation AND (2) the most representative member(s)</text>
+${[['① CORRELATED PROPERTIES','Mervis &amp; Rosch (1981)','🐦 small birds ➜ sing','🦅 large birds ➜ squawk','an “average” can’t store','which features go together','#f7e4e4',18],['② CONTEXT','Roth &amp; Shoben (1983)','“instrument” ➜ 🎹 piano','“campfire instrument”','➜ 🎸 guitar, harmonica','why would context matter?','#f6eedd',222],['③ CONJUNCTIONS','Hampton (1993)','“pet fish” ➜ 🐠 guppy,','goldfish, yet neither is','the prototype of “pet”','or of “fish”','#ece6f6',426]].map(c=>`<rect x="${c[7]}" y="152" width="196" height="210" rx="14" fill="${c[6]}"/><text x="${c[7]+98}" y="178" text-anchor="middle" font-size="12.5" font-weight="700" fill="${BAD}">${c[0]}</text><text x="${c[7]+98}" y="196" text-anchor="middle" font-size="10.5" fill="${MU}">${c[1]}</text><text x="${c[7]+98}" y="234" text-anchor="middle" font-size="12" fill="${INK}">${c[2]}</text><text x="${c[7]+98}" y="256" text-anchor="middle" font-size="12" fill="${INK}">${c[3]}</text><text x="${c[7]+98}" y="278" text-anchor="middle" font-size="12" fill="${INK}">${c[4]}</text><text x="${c[7]+98}" y="316" text-anchor="middle" font-size="11" fill="${N}" font-weight="700">${c[5]}</text>`).join('')}
+<text x="116" y="340" text-anchor="middle" font-size="10.5" fill="${MU}">people use this to classify</text>
+<rect x="18" y="376" width="604" height="80" rx="14" fill="#fff" stroke="${G}" stroke-width="1.5"/>
+<text x="34" y="400" font-size="12.5" font-weight="700" fill="${N}">The core problem</text>
+<text x="34" y="422" font-size="12" fill="${INK}">Representations are MORE COMPLEX than one average: we know properties</text>
+<text x="34" y="440" font-size="12" fill="${INK}">and their correlations, and we are sensitive to context and conjunctions.</text>
+</svg>`,
+bullets:[['✅','As a <b>descriptive term</b>, “prototype” is undoubted: prototype members are accessed faster, learned faster and primed more readily, and in network terms they sit a short distance from the category label.'],['⚠️','As a <b>theoretical explanation</b> it has fared less well: representations are more complex than one average.'],['🔗','<b>Correlated properties</b>: people know small birds sing and large birds squawk, and use this to classify (Mervis &amp; Rosch, 1981). An average can’t capture feature intercorrelations.'],['🎸','<b>Context</b> (Roth &amp; Shoben, 1983): “musical instrument” ➜ piano; “campfire musical instrument” ➜ guitar or harmonica. If a concept is centred on one or a few typical members, why would context matter?'],['🐠','<b>Conjunctions</b> (Hampton, 1993): “pet fish” ➜ guppy or goldfish, yet neither is prototypical of “pet” or “fish”.']],
+hook:'An average is a <b>blurry photo</b>: it loses which details go together, what fits the setting, and what fits a combination.',
+friend:'“Prototypes describe typicality well, but one average bird can’t explain why you know small birds sing, why ‘campfire instrument’ makes you think guitar, or why a ‘pet fish’ is a goldfish when that’s not a typical pet or a typical fish.”',
+gold:'“Prototype” works better as a description than as an explanation of how we represent concepts.',
+table:`<table><tr><th>Problem</th><th>Source</th><th>Example</th><th>Why it hurts prototypes</th></tr><tr><td class="el">Correlated properties</td><td>Mervis &amp; Rosch (1981)</td><td>small birds sing, large birds squawk</td><td>an average loses which features co-occur</td></tr><tr><td class="el">Context sensitivity</td><td>Roth &amp; Shoben (1983)</td><td>piano vs guitar/harmonica at a campfire</td><td>one fixed centre shouldn’t shift with context</td></tr><tr><td class="el">Conjunctions</td><td>Hampton (1993)</td><td>pet fish ➜ guppy, goldfish</td><td>the combination’s typical member isn’t typical of either part</td></tr></table>`,
+demo:'ctxdemo',
+videos:[['Pet fish problem — conceptual combination','pet fish problem conceptual combination prototype']],
+check:[['What processing advantages do prototypical members have?','They are accessed more quickly and easily, learned more quickly, and more likely to be primed by the category name, with a short network distance to the label.'],['Explain the three problems with the prototype approach.','Correlated properties (small birds sing, large squawk); context (campfire instrument ➜ guitar); conjunctions (pet fish ➜ goldfish, not typical of pet or fish).']]},
+
+/* L11 */
+{id:11,em:'🗂️',title:'The Exemplar Approach',topic:'Exemplar',sub:'No abstraction: every encounter is stored',
+svg:`<svg viewBox="0 0 640 470">
+<text x="320" y="26" text-anchor="middle" class="ser" font-size="21" font-weight="700" fill="${N}">Memory = a store of specific encounters</text>
+<rect x="18" y="42" width="290" height="200" rx="14" fill="#fbf8f1" stroke="#e8e1d3"/>
+<text x="163" y="64" text-anchor="middle" font-size="12" font-weight="700" fill="${N}">stored BIRD exemplars</text>
+<text x="163" y="104" text-anchor="middle" font-size="26">🐦🐦🐦🐦🐦🐦</text><text x="163" y="138" text-anchor="middle" font-size="26">🐦🐦🐤🕊️🦅🐧</text>
+<text x="163" y="172" text-anchor="middle" font-size="11.5" fill="${INK}">most stored birds are robins (or robin-like)</text>
+<text x="163" y="196" text-anchor="middle" font-size="11.5" fill="${OK}" font-weight="700">➜ typicality: “robin” comes to mind</text>
+<text x="163" y="222" text-anchor="middle" font-size="10.5" fill="${MU}">frequently encoded ➜ more likely retrieved</text>
+<rect x="318" y="42" width="304" height="200" rx="14" fill="#e3ecf7"/>
+<text x="470" y="64" text-anchor="middle" font-size="12" font-weight="700" fill="${N}">the STANDARD depends on circumstances</text>
+<text x="334" y="96" font-size="12" fill="${INK}">“Is an eagle a bird?”</text><text x="334" y="116" font-size="12" fill="${INK}">➜ retrieves a large bird of prey 🦅</text><text x="334" y="134" font-size="10.5" fill="${MU}">(Ross &amp; Spalding, 1994)</text>
+<text x="334" y="170" font-size="12" fill="${INK}">🎄 December: “name a song”</text><text x="334" y="190" font-size="12" fill="${INK}">➜ “Jingle Bells”</text><text x="334" y="208" font-size="10.5" fill="${MU}">temporal context primes the exemplar</text>
+<text x="320" y="272" text-anchor="middle" class="ser" font-size="17" font-weight="700" fill="${N}">What the exemplar approach can explain</text>
+${[['Classical problems','typicality: no problem','(most stored birds are robins)','#e2f1e6'],['Context','context primes certain exemplars','(“harmonica” for campfire)','#f6eedd'],['Correlated properties','every encounter stored, so all','info available (Malt &amp; Smith, ’84)','#ece6f6']].map((b,i)=>`<rect x="${18+i*204}" y="286" width="196" height="100" rx="12" fill="${b[3]}"/><text x="${116+i*204}" y="312" text-anchor="middle" font-size="12" font-weight="700" fill="${N}">✓ ${b[0]}</text><text x="${116+i*204}" y="340" text-anchor="middle" font-size="11" fill="${INK}">${b[1]}</text><text x="${116+i*204}" y="358" text-anchor="middle" font-size="11" fill="${INK}">${b[2]}</text>`).join('')}
+<rect x="18" y="398" width="604" height="60" rx="12" fill="#fff" stroke="${G}"/>
+<text x="34" y="422" font-size="12" fill="${INK}"><tspan font-weight="700">Extreme version:</tspan> no abstraction or generalisation; “guitar” = every encounter with guitars.</text>
+<text x="34" y="442" font-size="12" fill="${INK}">Thinking of the concept = retrieving one of these encounters (Brooks, 1987).</text>
+</svg>`,
+bullets:[['🗂️','Partly in response to the prototype’s problems: <b>exemplar approach</b>. Categories are represented by <b>examples</b>, with no single abstracted representation (Brooks, 1978; Hintzman, 1986; Nosofsky, 1984).'],['♾️','<b>Extreme version</b>: no abstraction at all. Your concept “guitar” is <b>every single encounter</b> with guitars; thinking of it retrieves one (Brooks, 1987).'],['⚖️','Still <b>similarity based</b>, but the standard is a <b>specific example</b> that depends on circumstances (eagle ➜ large bird of prey; Ross &amp; Spalding, 1994).'],['🐦','Solves classical problems: we think “robin” because <b>most stored birds are robins</b>, and frequently encoded instances are more easily retrieved.'],['🎄','Solves prototype problems: <b>context primes</b> exemplars (harmonica, Jingle Bells in December), and <b>correlated properties</b> are available because every encounter is stored (Malt &amp; Smith, 1984).']],
+hook:'Exemplar theory = your brain as a <b>photo library</b>, and the search results depend on the season.',
+friend:'“Maybe your brain doesn’t average at all. It just keeps every example you’ve met. Ask for a song in December and you pull out ‘Jingle Bells’, because the setting brings certain memories to the front.”',
+gold:'In the exemplar approach, the standard is a specific stored example, and which one is retrieved depends on the circumstances.',
+table:`<table><tr><th colspan="2">Model: the exemplar approach</th></tr><tr><td class="el">Key names</td><td>Brooks (1978, 1987); Hintzman (1986); Nosofsky (1984)</td></tr><tr><td class="el">Representation</td><td>Stored category exemplars; no single abstracted representation</td></tr><tr><td class="el">Standard</td><td>A specific example, which depends on circumstances (Ross &amp; Spalding, 1994)</td></tr><tr><td class="el">Explains typicality</td><td>Most stored birds are robins, and frequent encodings are retrieved more</td></tr><tr><td class="el">Explains context</td><td>Context primes certain exemplars (campfire ➜ harmonica; December ➜ Jingle Bells)</td></tr><tr><td class="el">Explains correlations</td><td>All information about members is stored (Malt &amp; Smith, 1984)</td></tr></table>`,
+videos:[['Exemplar theory explained','exemplar theory categorization Nosofsky Hintzman']],
+check:[['How does the exemplar approach explain why “robin” comes to mind for “bird”?','Most stored bird exemplars are robins or robin-like, and frequently encoded instances are more likely to be retrieved.'],['How does it handle the context problem that troubled prototype theory?','Context activates, or primes, particular exemplars: campfire ➜ harmonica, December ➜ Jingle Bells.']]},
+
+/* L12 */
+{id:12,em:'🥊',title:'Exemplar Problems & the Verdict: Both?',topic:'Exemplar',sub:'Posner again, the economy problem, and Malt (1989)',
+svg:`<svg viewBox="0 0 640 470">
+<text x="320" y="26" text-anchor="middle" class="ser" font-size="21" font-weight="700" fill="${N}">The scoreboard of similarity-based theories</text>
+${(()=>{const rows=[['Hard-to-define concepts','✗','✓','✓'],['Typicality / graded structure','✗','✓','✓'],['Fuzzy boundaries','✗','✓','✓'],['Correlated properties','—','✗','✓'],['Context effects','—','✗','✓'],['Unseen prototype recognised (Posner)','—','✓','✗'],['Economy (storage)','✓','✓','✗']];
+let s=`<rect x="18" y="42" width="604" height="30" rx="8" fill="${N}"/><text x="30" y="62" font-size="12" font-weight="700" fill="#fff">Phenomenon</text>`+['Classical','Prototype','Exemplar'].map((h,i)=>`<text x="${385+i*85}" y="62" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">${h}</text>`).join('');
+rows.forEach((r,j)=>{const y=76+j*32;s+=`<rect x="18" y="${y}" width="604" height="30" fill="${j%2?'#fcfaf5':'#fff'}"/><text x="30" y="${y+20}" font-size="12" fill="${INK}">${r[0]}</text>`;r.slice(1).forEach((v,i)=>s+=`<text x="${385+i*85}" y="${y+21}" text-anchor="middle" font-size="15" font-weight="700" fill="${v=='✓'?OK:v=='✗'?BAD:MU}">${v}</text>`)});return s})()}
+<text x="30" y="318" font-size="10.5" fill="${MU}">(summary built from the text; “—” = not directly discussed for that approach)</text>
+<rect x="18" y="330" width="296" height="128" rx="14" fill="#f7e4e4"/>
+<text x="34" y="352" font-size="12.5" font-weight="700" fill="${BAD}">Exemplar problems</text>
+<text x="34" y="374" font-size="11.5" fill="${INK}">① Posner: the prototype was never</text><text x="48" y="390" font-size="11.5" fill="${INK}">encoded, so how is it “recognised”?</text>
+<text x="34" y="412" font-size="11.5" fill="${INK}">② Economy (Komatsu, 1992): store</text><text x="48" y="428" font-size="11.5" fill="${INK}">EVERY encounter? And if only some,</text><text x="48" y="444" font-size="11.5" fill="${INK}">what decides which ones?</text>
+<rect x="326" y="330" width="296" height="128" rx="14" fill="#e2f1e6"/>
+<text x="342" y="352" font-size="12.5" font-weight="700" fill="${OK}">Verdict: Malt (1989)</text>
+<text x="342" y="376" font-size="11.5" fill="${INK}">Under different circumstances,</text><text x="342" y="394" font-size="11.5" fill="${INK}">people classify using EITHER</text><text x="342" y="412" font-size="11.5" fill="${INK}">exemplars OR prototypes.</text>
+<text x="342" y="440" font-size="11.5" font-weight="700" fill="${GD}">“The boundary between these theories</text><text x="342" y="455" font-size="11.5" font-weight="700" fill="${GD}">is definitely fuzzy!” 😉</text>
+</svg>`,
+bullets:[['🔁','In some circumstances people clearly use an <b>abstracted representation</b> built from repeated encounters.'],['⚫','<b>Posner et al. (1967)</b>: people “recognised” a prototype never seen. There was no exemplar for it, so the exemplar approach can’t explain this.'],['💾','<b>Economy problem</b> (Komatsu, 1992): it strains credulity that every encounter is stored, which recalls the <b>template view</b> of pattern recognition. And if only some are stored, what decides which?'],['🤝','Both approaches have merit and may both describe concept representation accurately.'],['⚖️','<b>Malt (1989)</b>: under different circumstances people classify by <b>either exemplars or prototypes</b>. The boundary between the theories is itself fuzzy.']],
+hook:'Prototype and exemplar are <b>two tools in the same toolbox</b>: the mind picks one depending on the job.',
+friend:'“The ‘store every example’ idea can’t explain remembering a pattern you never saw, and storing everything seems wasteful. Research suggests we switch between averages and examples depending on the situation.”',
+gold:'Malt (1989): people may classify based on either exemplars or prototypes, depending on the circumstances.',
+table:`<table><tr><th colspan="2">Study: Malt (1989)</th></tr><tr><td class="el">Question</td><td>Do people classify using prototypes or exemplars?</td></tr><tr><td class="el">Finding (as reported)</td><td>Under different circumstances, people may classify on the basis of either.</td></tr><tr><td class="el">Conclusion</td><td>Both approaches have merit; the boundary between them is fuzzy.</td></tr></table>`,
+videos:[['Prototype vs exemplar theory — which is right?','prototype vs exemplar theory debate categorization']],
+check:[['Why is Posner et al. (1967) a problem for the exemplar approach?','People recognised a prototype that was never presented, so no exemplar was ever encoded to be retrieved.'],['What is the economy problem?','It strains credulity that every encounter with every object is stored (like the template view); and if only some are stored, what determines which ones? (Komatsu, 1992)'],['What did Malt (1989) conclude?','People may classify using either exemplars or prototypes, depending on circumstances.']]},
+
+/* L13 */
+{id:13,em:'💎',title:'Essentialist Approach: Concepts as Theories',topic:'Essentialism',sub:'Top-down categorisation by a believed essence (Medin & Ortony, 1989; Rips, 1989)',
+svg:`<svg viewBox="0 0 640 470">
+<text x="320" y="26" text-anchor="middle" class="ser" font-size="21" font-weight="700" fill="${N}">Bottom-up similarity vs top-down theory</text>
+<rect x="18" y="42" width="296" height="250" rx="16" fill="#e3ecf7"/>
+<text x="166" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="${N}">⬆️ SIMILARITY-BASED</text><text x="166" y="82" text-anchor="middle" font-size="10.5" fill="${MU}">classical · prototype · exemplar</text>
+<rect x="60" y="100" width="212" height="34" rx="9" fill="#fff"/><text x="166" y="122" text-anchor="middle" font-size="12" fill="${INK}">CATEGORY: bird</text>
+<line x1="166" y1="180" x2="166" y2="140" stroke="${N}" stroke-width="2.5" marker-end="url(#arr)"/>
+<text x="176" y="164" font-size="10.5" fill="${MU}">compare / match</text>
+<rect x="40" y="186" width="252" height="40" rx="9" fill="#fff"/><text x="166" y="211" text-anchor="middle" font-size="11.5" fill="${INK}">wings · feathers · flies · beak</text>
+<text x="166" y="256" text-anchor="middle" font-size="11.5" fill="${INK}">encode particular features in the</text><text x="166" y="274" text-anchor="middle" font-size="11.5" fill="${INK}">world ➜ compare to a standard</text>
+<rect x="326" y="42" width="296" height="250" rx="16" fill="#f6eedd"/>
+<text x="474" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="${GD}">⬇️ ESSENTIALIST</text><text x="474" y="82" text-anchor="middle" font-size="10.5" fill="${MU}">concepts as theories</text>
+<circle cx="474" cy="125" r="30" fill="${G}"/><text x="474" y="132" text-anchor="middle" font-size="20">💎</text>
+<text x="474" y="172" text-anchor="middle" font-size="11.5" font-weight="700" fill="${INK}">a general idea / theory of what</text><text x="474" y="188" text-anchor="middle" font-size="11.5" font-weight="700" fill="${INK}">the concept IS at its core</text>
+<line x1="474" y1="198" x2="474" y2="230" stroke="${GD}" stroke-width="2.5" marker-end="url(#arrg)"/>
+<text x="474" y="252" text-anchor="middle" font-size="11.5" fill="${INK}">essence not always obvious; may not</text><text x="474" y="270" text-anchor="middle" font-size="11.5" fill="${INK}">relate to physical appearance</text>
+<rect x="18" y="304" width="604" height="154" rx="16" fill="#fff" stroke="${G}" stroke-width="1.5"/>
+<text x="34" y="328" font-size="12.5" font-weight="700" fill="${N}">Rips (1989): stories about made-up organisms</text>
+<text x="44" y="372" font-size="34">🐦</text><line x1="90" y1="360" x2="170" y2="360" stroke="${N}" stroke-width="2" marker-end="url(#arr)"/><text x="130" y="350" text-anchor="middle" font-size="10" fill="${MU}">accident /</text><text x="130" y="378" text-anchor="middle" font-size="10" fill="${MU}">change</text>
+<text x="180" y="372" font-size="34">🦗</text>
+<text x="240" y="352" font-size="11.5" fill="${INK}">Now MORE SIMILAR to an insect…</text>
+<text x="240" y="372" font-size="11.5" fill="${INK}">…but judged MORE LIKELY still a bird</text>
+<text x="240" y="394" font-size="10" fill="${MU}">(scan cuts off here; outcome as usually reported)</text>
+<text x="34" y="430" font-size="12" font-weight="700" fill="${BAD}">➜ categorisation goes beyond superficial perceptual similarity</text>
+<text x="34" y="448" font-size="11" fill="${MU}">Categories aren’t represented solely by features (Medin &amp; Ortony, 1989)</text>
+</svg>`,
+bullets:[['⬆️','Similarity-based approaches are <b>bottom-up</b>: a robin is a bird because it has bird features, or resembles a prototype or exemplar.'],['⬇️','Alternative, <b>top-down</b>: categorisation is based on a person’s general idea, or <b>theory</b>, of the concept’s <b>essence</b>: what it is at its core.'],['💎','The essence isn’t always obvious or tied to physical appearance, hence <b>essentialist approaches</b> (Medin &amp; Ortony, 1989).'],['🚫','Implication: categories aren’t represented solely by features, and comparing categories goes <b>beyond superficial perceptual similarity</b>.'],['🐦','<b>Rips (1989)</b> used stories about made-up organisms to show that similarity-based approaches are inadequate. The scan cuts off here; check the next page for the full procedure.']],
+hook:'Similarity reads the <b>cover</b>; essentialism reads the <b>DNA</b>.',
+friend:'“The earlier theories say ‘it looks like a bird, so it’s a bird’. Essentialism says you have a theory of what a bird really is inside. If a bird changed to look like an insect, you’d probably still say it’s a bird.”',
+gold:'Categorisation goes well beyond superficial comparison of perceptual similarity: we categorise by our theory of a thing’s essence.',
+table:`<table><tr><th></th><th>Similarity-based (classical, prototype, exemplar)</th><th>Essentialist</th></tr><tr><td class="el">Direction</td><td>Bottom-up</td><td>Top-down</td></tr><tr><td class="el">Basis</td><td>Encoding features and comparing them to a standard</td><td>A theory of the concept’s core essence</td></tr><tr><td class="el">Role of appearance</td><td>Central</td><td>Essence may be unrelated to appearance</td></tr><tr><td class="el">Key names</td><td>Bruner et al.; Rosch; Posner; Brooks; Nosofsky</td><td>Medin &amp; Ortony (1989); Rips (1989)</td></tr></table>
+<table><tr><th colspan="2">Study: Rips (1989)</th></tr><tr><td class="el">Purpose</td><td>Show the inadequacy of similarity-based approaches and the validity of essentialist approaches</td></tr><tr><td class="el">Method</td><td>Stories about made-up organisms (the scanned page ends here)</td></tr><tr><td class="el">Usual outcome</td><td>An animal that came to resemble another category through an accident was judged more similar to the new category, yet still a member of its original one. <i>Verify against p. 208.</i></td></tr></table>`,
+demo:'essdemo',
+videos:[['Psychological essentialism — concepts as theories','theory theory concepts essentialism Rips 1989 similarity categorization']],
+check:[['Contrast bottom-up and top-down categorisation.','Bottom-up: encode an entity’s features and compare them to a stored standard (similarity based). Top-down: start from a theory of the concept’s essence and categorise by that.'],['What is a critical implication of essences for how we represent categories?','Categories are not represented solely by features, and comparing categories goes beyond a simple judgment of perceptual similarity.']]}
+];
+const SYNTH="Knowledge can be pictured as a <b>semantic network</b> of concept nodes and links, whose organisation shows in <b>verification speed</b> and whose retrieval works by <b>spreading activation</b>, which explains <b>semantic priming</b>. Concepts are the <b>building blocks of thought</b>, enabling understanding, prediction, learning and communication. Categories range from tightly similar <b>natural kinds</b> to loose <b>ad hoc</b> and <b>metaphorical</b> ones. Explaining their structure has been a relay of theories: the <b>classical view</b>’s necessary-and-sufficient definitions fail on undefinable concepts, <b>graded structure</b> and <b>fuzzy boundaries</b>. The <b>prototype approach</b> solves these (and Posner’s dot patterns show we abstract averages) but stumbles on <b>correlated properties, context and conjunctions</b>. The <b>exemplar approach</b> handles those but cannot explain unseen prototypes or the <b>economy</b> of storage, and Malt shows we use both. Finally, the <b>essentialist approach</b> argues that all similarity-based accounts miss that we categorise <b>top-down</b>, by theories of a thing’s hidden essence. <i>In short: concepts are stored in associative networks, but what makes a thing what it is lies in a flexible mix of similarity and deeper theory.</i>";
+
+const TIMELINE=[
+['1956','Bruner, Goodnow & Austin','Classical view: categories defined by necessary and sufficient features.'],
+['1967','Posner, Goldsmith & Welton','Dot patterns: people “recognise” a prototype they never saw, evidence for prototype abstraction.'],
+['1973','Rosch','Typicality and graded structure of categories.'],
+['1975','Collins & Loftus · Rosch & Mervis','Spreading activation model of semantic networks; family resemblance and typicality.'],
+['1978','Brooks','An early exemplar approach.'],
+['1981','Mervis & Rosch','Correlated properties: small birds sing, large birds squawk.'],
+['1983','Barsalou · Roth & Shoben','Ad hoc categories; context changes which member is typical.'],
+['1984','Nosofsky · Malt & Smith','Exemplar models; sensitivity to correlated properties.'],
+['1986','Hintzman','Exemplar (multiple-trace) approach.'],
+['1987','Brooks','Extreme exemplar view: thinking of a concept = retrieving an encounter.'],
+['1989','Malt · Medin & Ortony · Rips','People use prototypes OR exemplars; psychological essentialism; the made-up organism studies.'],
+['1992','Komatsu','The economy problem for exemplar theory.'],
+['1993','Hampton','Conjunctions: “pet fish” ➜ guppy, goldfish.'],
+['1994','Ross & Spalding','The exemplar retrieved depends on circumstances (eagle ➜ bird of prey).'],
+['1999','Solomon, Medin & Lynch · Medin & Heit','“Concepts are the building blocks of thought”; natural kinds are labelled after discovery.'],
+['2003','Goldstone & Kersten','Category types ordered by the similarity of their members.'],
+['2005','Medin & Rips','Review of the functions of concepts.']
+];
+const FLASH=[
+['Networks','Semantic network','Knowledge stored as an associative network: concepts are nodes, relationships are links.'],
+['Networks','Category verification task','Verify statements like “A robin is a bird” as fast as possible, to study access to categorical knowledge.'],
+['Networks','Feature verification task','Verify statements like “A cat has pointy ears” as fast as possible, to study how features are stored.'],
+['Networks','Key DV in verification tasks','Speed (RT). Accuracy is near ceiling.'],
+['Networks','Robin vs penguin verification','“A robin is a bird” is verified faster, so robin is more tightly connected to “bird”.'],
+['Networks','Pointy ears vs skin','“A cat has pointy ears” is verified faster, which reflects the proximity of features to “cat”.'],
+['Networks','Semantic vs neural network nodes','Semantic nodes = specific concepts (“canary”); neural nodes = neuron-like, no “canary” neuron.'],
+['Networks','What semantic & neural networks share','Excitatory connections explain knowledge activation and retrieval.'],
+['Networks','Spreading activation model','Collins & Loftus (1975): activating a node spreads activation along links to related nodes.'],
+['Networks','Activation decreases with…','time, distance, and the number of concepts activated.'],
+['Networks','Threshold','Activation reaching a node is summed; past the threshold, the concept is activated.'],
+['Networks','Semantic priming','Processing one stimulus speeds processing of a related one (yellow ➜ lemon).'],
+['Concepts','“Building blocks of thought”','Solomon, Medin & Lynch (1999).'],
+['Concepts','Four functions of concepts','Understanding, prediction, learning, communication (Medin & Rips, 2005).'],
+['Concepts','Reality-show example','The label evokes real people, competition, prize, embarrassment: inferring unstated knowledge.'],
+['Concepts','Restaurant coffee vs real coffee','Communication: combining concepts through language.'],
+['Concepts','Natural kinds','Natural categories; members share basic features (flowers); labelled after discovery.'],
+['Concepts','Artifacts','Human-designed for functions (tools, sports, furniture); members share fewer features.'],
+['Concepts','Ad hoc categories','Formed on the fly for a goal (Barsalou, 1983): things to take on vacation.'],
+['Concepts','Metaphorical concept','Very different situations united by a theme: “emotional prison”.'],
+['Concepts','Goldstone & Kersten (2003)','Order category types by how similar their members are.'],
+['Classical','Similarity-based approaches','Categorise by judging similarity between the target and a standard in long-term memory.'],
+['Classical','Classical view','Members share features that are necessary and sufficient (Bruner, Goodnow & Austin, 1956).'],
+['Classical','Classical example','Triangle: closed, three-sided figure, angles sum to 180°.'],
+['Classical','Most significant criticism of the classical view','Many concepts (e.g., game) can’t be defined by necessary + sufficient features.'],
+['Classical','Graded structure / typicality effect','Members aren’t equal; furniture ➜ table, chair, couch. The classical view can’t explain it.'],
+['Classical','Fuzzy boundaries','No clear-cut edges; is bowling a sport? It’s “sort of”.'],
+['Prototype','Prototype approach','Members have features likely to be present; membership = similarity to the prototype.'],
+['Prototype','Family resemblance','Sharing many features with other category members, which makes an item typical.'],
+['Prototype','Robin vs penguin (prototype)','Robin has flies, chirps, feathers, beak (4); penguin only 2, an aberration.'],
+['Prototype','Posner et al. (1967)','Dot-pattern distortions; the never-seen prototype was confidently “recognised”.'],
+['Prototype','Two meanings of “prototype”','The theoretical abstracted representation AND the most representative member(s).'],
+['Prototype','Correlated properties problem','Small birds sing, large squawk (Mervis & Rosch, 1981); an average can’t capture this.'],
+['Prototype','Context problem','Musical instrument ➜ piano; campfire instrument ➜ guitar/harmonica (Roth & Shoben, 1983).'],
+['Prototype','Conjunction problem','“Pet fish” ➜ guppy/goldfish, not prototypical of pet or fish (Hampton, 1993).'],
+['Exemplar','Exemplar approach','Categories represented by stored examples; no abstraction (Brooks; Hintzman; Nosofsky).'],
+['Exemplar','How exemplars handle context','Context primes certain exemplars (December ➜ Jingle Bells).'],
+['Exemplar','Economy problem','Storing every encounter strains credulity (Komatsu, 1992); which are stored?'],
+['Exemplar','Malt (1989)','People classify by either exemplars or prototypes depending on circumstances.'],
+['Essentialism','Essentialist approach','Concepts as theories: top-down categorisation by a believed core essence (Medin & Ortony, 1989).'],
+['Essentialism','Bottom-up vs top-down','Bottom-up: features ➜ compare to a standard. Top-down: a general theory of what the concept IS.'],
+['Essentialism','Rips (1989)','Made-up organism stories showing similarity-based approaches are inadequate.']
+];
+const MCQ=[
+['In a semantic network, what do nodes represent?',['Neurons','Specific concepts or features','Reaction times','Brain regions'],1,'Semantic network nodes correspond to specific concepts (e.g., “canary”); links are relationships.'],
+['What is the most informative dependent variable in category and feature verification tasks?',['Accuracy','Confidence','Speed','Number of links'],2,'Accuracy is near ceiling, so speed reveals knowledge organisation.'],
+['People verify “A cat has pointy ears” faster than “A cat has skin”. This suggests…',['skin is not a feature of cats','pointy ears is closer to the concept “cat” in the network','people guess','feature verification is inaccurate'],1,'Faster verification reflects the proximity of the feature to the concept.'],
+['Which is NOT an assumption of Collins & Loftus’s (1975) spreading activation model?',['Activation spreads to related nodes','Activation decreases with distance','Activation increases with the number of concepts activated','Activation is summed and must pass a threshold'],2,'The more concepts activated, the LESS activation any one receives.'],
+['“Yellow” speeds up recognition of “lemon”. This is…',['the typicality effect','semantic priming','an ad hoc category','the economy problem'],1,'Semantic priming: activation from yellow gives lemon a head start toward threshold.'],
+['How do semantic networks differ from neural networks?',['Semantic networks are based on brain structure','Neural networks have a node for “canary”','Semantic network nodes correspond to specific concepts; neural network nodes do not','They share no similarities'],2,'Neural networks have no single neuron for “canary”. Both do use excitatory connections.'],
+['Knowing a show is a “reality show” lets you infer it has real people and prize money. Which function of concepts is this?',['Understanding (mental shorthand)','Communication','Economy','Abstraction'],0,'Concepts serve as quick, efficient shorthand, letting us infer unstated knowledge.'],
+['According to Goldstone & Kersten (2003), which category type has the MOST similar members?',['Ad hoc','Metaphorical','Artifacts','Natural kinds'],3,'Natural kinds > artifacts > ad hoc > metaphorical.'],
+['“Things to take on vacation” is an example of…',['a natural kind','an artifact category','an ad hoc category','a metaphorical concept'],2,'Barsalou (1983): formed on the fly to serve a goal.'],
+['According to the classical view, a concept is defined by features that are…',['typical','necessary and sufficient','correlated','essential'],1,'Bruner, Goodnow & Austin (1956).'],
+['The textbook calls which the MOST significant criticism of the classical view?',['Categories have fuzzy boundaries','It is hard to specify necessary and sufficient features for many concepts (e.g., game)','It can’t explain priming','It ignores context'],1,'It gets at the very core of the approach.'],
+['Asked to name furniture, most people say table, chair or couch. This illustrates…',['graded structure (typicality effect)','the economy problem','semantic priming','an essence'],0,'Category members are not equal; the classical view can’t explain this.'],
+['Why is bowling hard to classify, according to the prototype approach?',['It lacks defining features','It lies about equidistant from the prototypes of “game” and “sport”','It is an ad hoc category','It has no exemplars'],1,'Near the boundary between two prototypes, so classification is hard.'],
+['In Posner, Goldsmith & Welton (1967), participants…',['recognised studied patterns only','confidently claimed to have seen the prototype, which was never presented','could not tell old from new patterns','preferred random patterns'],1,'Evidence that they abstracted a prototype from the distortions.'],
+['“Small birds sing, large birds squawk” is a problem for prototype theory because…',['an average representation can’t capture correlated properties','small birds are atypical','it involves context','it is an essence'],0,'Mervis & Rosch (1981): people know and use feature intercorrelations.'],
+['“Campfire musical instrument” brings to mind guitar rather than piano. This shows that categories are…',['well-defined','context-sensitive','ad hoc','essentialist'],1,'Roth & Shoben (1983): a problem for prototype theory.'],
+['“Pet fish” ➜ goldfish, although a goldfish is not a typical pet or a typical fish. This is the problem of…',['economy','conjunctions of concepts','graded structure','feature verification'],1,'Hampton (1993).'],
+['Which finding is hardest for the EXEMPLAR approach to explain?',['Typicality','Context effects','Recognition of a never-seen prototype (Posner et al., 1967)','Correlated properties'],2,'No exemplar of the prototype was ever encoded.'],
+['What did Malt (1989) demonstrate?',['Only exemplars are used','Only prototypes are used','People may classify by either exemplars or prototypes depending on circumstances','Categories have essences'],2,'Both approaches have merit; the boundary between them is fuzzy.'],
+['Essentialist approaches differ from similarity-based approaches because they are…',['bottom-up and feature-based','top-down, based on a theory of the concept’s core essence','based on stored exemplars','based on necessary and sufficient features'],1,'Categorisation goes beyond superficial perceptual similarity (Medin & Ortony, 1989).'],
+['Rips (1989) used stories about made-up organisms to show…',['that similarity-based approaches are inadequate','that priming spreads','that ad hoc categories exist','the economy problem'],0,'He demonstrated the inadequacy of similarity-based approaches and the validity of essentialist ones.']
+];
+
+const DEMOS={
+rtdemo:{title:'Time your own verification',html:()=>`<p>Answer <b>True</b> or <b>False</b> as fast as you can. Your reaction times will be plotted.</p><button class="btn" id="rtStart">▶ Start</button><div id="rtStage" style="margin:14px 0;min-height:70px;font-family:var(--serif);font-size:1.8rem;color:var(--navy)"></div><div id="rtBtns" style="display:none"><button class="btn" id="rtT">True</button> <button class="btn ghost" id="rtF">False</button></div><div id="rtOut"></div>`,
+init(){const S=[['A robin is a bird',1,'typical'],['A sparrow is a bird',1,'typical'],['A penguin is a bird',1,'atypical'],['An ostrich is a bird',1,'atypical'],['A cat has pointy ears',1,'close feature'],['A cat has skin',1,'distant feature'],['A bat is a bird',0,'false'],['A canary is yellow',1,'close feature']];let q=[],i=0,t0=0,res=[];
+rtStart.onclick=()=>{q=[...S].sort(()=>Math.random()-.5);i=0;res=[];rtOut.innerHTML='';rtBtns.style.display='block';next()};
+function next(){if(i>=q.length)return done();rtStage.textContent='…';setTimeout(()=>{rtStage.textContent=q[i][0];t0=performance.now()},500+Math.random()*500)}
+function ans(v){if(!t0)return;const rt=performance.now()-t0;t0=0;res.push([q[i][0],rt,v==q[i][1],q[i][2]]);i++;next()}
+rtT.onclick=()=>ans(1);rtF.onclick=()=>ans(0);
+function done(){rtBtns.style.display='none';rtStage.textContent='Done ✓';const mx=Math.max(...res.map(r=>r[1]));
+rtOut.innerHTML=res.sort((a,b)=>a[1]-b[1]).map(r=>`<div style="display:flex;align-items:center;gap:8px;font-size:.85rem;margin:3px 0"><span style="width:190px">${r[0]}</span><span style="display:inline-block;height:14px;width:${r[1]/mx*260}px;background:${r[3]=='typical'||r[3]=='close feature'?'#3f9a62':r[3]=='false'?'#9fb3d4':'#c9a96e'};border-radius:3px"></span>${Math.round(r[1])} ms ${r[2]?'':'❌'}</div>`).join('')+`<div class="gold" style="font-size:1.05rem">Green = typical or close features, gold = atypical or distant features. In the research, the green items are verified faster. With only one trial each your data are noisy, which is why real studies average many trials.</div>`}}},
+
+spreaddemo:{title:'Click a node to prime it',html:()=>`<p>Click any concept to activate it and watch activation spread. It weakens with <b>distance</b> and is shared among <b>more</b> neighbours. Nodes in gold (≥ 50%) are strongly primed.</p><svg id="spSvg" viewBox="0 0 580 320" style="width:100%;max-width:620px;background:#fff;border:1px solid var(--line);border-radius:12px"></svg><div id="spOut"></div>`,
+init(){const adj={};NET.links.forEach(([a,b])=>{(adj[a]=adj[a]||[]).push(b);(adj[b]=adj[b]||[]).push(a)});
+function draw(src){let act={};if(src){act[src]=1;let front=[src],seen={[src]:1};for(let d=1;d<=3;d++){const nf=[];front.forEach(n=>{const share=act[n]*0.9/Math.max(1,adj[n].length/2.2);adj[n].forEach(m=>{if(!seen[m]){act[m]=Math.max(act[m]||0,share);nf.push(m)}})});nf.forEach(m=>seen[m]=1);front=nf}}
+spSvg.innerHTML=`<g transform="translate(20,20)">${netSVG(src?Object.fromEntries(Object.entries(act).map(([k,v])=>[k,k===src?1:Math.min(.99,v)])):{})}</g>`;
+spSvg.querySelectorAll('.nn').forEach(g=>g.onclick=()=>draw(g.dataset.n));
+if(src){const pr=Object.entries(act).filter(([k,v])=>k!==src&&v>=.5).map(([k])=>k);spOut.innerHTML=`<p><b>Primed “${src}”.</b> Strong head start: ${pr.length?pr.join(', '):'none; activation got spread too thin'}. These would now be recognised faster (semantic priming).</p>`}}
+draw(null);}},
+
+sortdemo:{title:'Sort the category',html:()=>`<p>Which type of category does each belong to?</p><div id="soHost"></div><div id="soOut"></div>`,
+init(){const T=['natural kind','artifact','ad hoc','metaphorical'];const I=[['🌹 rose & daisy (flower)',0],['🔨 tools',1],['⚽ soccer & cross-country (sport)',1],['🧴 sunscreen, as a “thing to take on vacation”',2],['⛓️ a dead-end job, as an “emotional prison”',3],['🐦 birds',0],['📸 things to rescue from a burning house',2],['🪑 furniture',1]];let sc=0,n=0;
+soHost.innerHTML=I.map((it,i)=>`<div style="margin:6px 0"><span style="display:inline-block;min-width:300px">${it[0]}</span>${T.map((t,j)=>`<span class="chip" data-i="${i}" data-j="${j}">${t}</span>`).join('')}</div>`).join('');
+soHost.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const i=+c.dataset.i,j=+c.dataset.j;const row=soHost.querySelectorAll(`.chip[data-i="${i}"]`);if([...row].some(x=>x.dataset.done))return;row.forEach(x=>{x.dataset.done=1;if(+x.dataset.j===I[i][1]){x.style.background='#e3f4e8';x.style.borderColor='#3f9a62'}});if(j!==I[i][1]){c.style.background='#fbe6e4';c.style.borderColor='#c2544b'}else sc++;n++;
+if(n===I.length)soOut.innerHTML=`<div class="gold" style="font-size:1.05rem">${sc}/${I.length} correct. Remember the scale: natural kinds share the most features, metaphorical concepts the fewest, yet each still has an underlying concept.</div>`})}},
+
+sportdemo:{title:'Sport or not a sport?',html:()=>`<p>The textbook’s class vote, for you to try.</p><div id="spoHost"></div><div id="spoOut"></div>`,
+init(){const I=['🎳 bowling','♟️ chess','🎯 darts','⛳ golf','🎣 fishing','📣 cheerleading','🃏 poker','🎮 e-sports'];const a={};
+spoHost.innerHTML=I.map((t,i)=>`<div style="margin:4px 0"><span style="display:inline-block;min-width:160px">${t}</span>${['Sport','Sort of','Not a sport'].map(o=>`<span class="chip" data-i="${i}" data-o="${o}">${o}</span>`).join('')}</div>`).join('');
+spoHost.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{spoHost.querySelectorAll(`.chip[data-i="${c.dataset.i}"]`).forEach(x=>x.classList.remove('sel'));c.classList.add('sel');a[c.dataset.i]=c.dataset.o;
+if(Object.keys(a).length===I.length){const s=Object.values(a).filter(v=>v==='Sort of').length;spoOut.innerHTML=`<div class="gold" style="font-size:1.05rem">You answered “sort of” ${s} time(s). The classical view doesn’t allow “sort of”: something is a sport or it isn’t. Yet people always split on cases like bowling. That is the fuzzy-boundary problem.</div>`}})}},
+
+dotdemo:{title:'Posner-style dot patterns',html:()=>`<p><b>Phase 1:</b> watch 5 patterns, 1.5 s each. <b>Phase 2:</b> say whether you saw each test pattern before.</p><button class="btn" id="dtStart">▶ Start study phase</button><div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center;margin-top:12px"><svg id="dtSvg" viewBox="0 0 120 120" style="width:170px;background:#fff;border:1px solid var(--line);border-radius:12px"></svg><div id="dtCtl"></div></div><div id="dtOut"></div>`,
+init(){const rnd=()=>Array.from({length:9},()=>[15+Math.random()*90,15+Math.random()*90]);const dist=(p,a)=>p.map(q=>[Math.min(110,Math.max(10,q[0]+(Math.random()-.5)*a)),Math.min(110,Math.max(10,q[1]+(Math.random()-.5)*a))]);
+const show=p=>dtSvg.innerHTML=p.map(q=>`<circle cx="${q[0]}" cy="${q[1]}" r="4" fill="#34466b"/>`).join('');
+dtStart.onclick=()=>{const proto=rnd();const studied=Array.from({length:5},()=>dist(proto,34));let k=0;dtOut.innerHTML='';dtCtl.innerHTML='<b>Study…</b>';
+const iv=setInterval(()=>{if(k<5){show(studied[k]);dtCtl.innerHTML=`<b>Study pattern ${k+1}/5</b>`;k++}else{clearInterval(iv);test(proto,studied)}},1500);show(studied[0]);k=1};
+function test(proto,st){const T=[[st[1],'old (studied)'],[proto,'PROTOTYPE, never shown'],[rnd(),'new, unrelated'],[st[3],'old (studied)']].sort(()=>Math.random()-.5);let i=0;const res=[];
+function q(){if(i>=T.length){dtSvg.innerHTML='';dtCtl.innerHTML='';dtOut.innerHTML=`<table><tr><th>Test pattern</th><th>You said</th></tr>${res.map(r=>`<tr><td class="el">${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table><div class="gold" style="font-size:1.05rem">Did you say “seen” to the prototype? Posner’s participants confidently did, even though it was never presented. Their minds had averaged the distortions.</div>`;return}
+show(T[i][0]);dtCtl.innerHTML=`<b>Test ${i+1}/4:</b> seen before?<br><button class="btn" id="dy">Seen</button> <button class="btn ghost" id="dn">New</button>`;
+dy.onclick=()=>{res.push([T[i][1],'Seen']);i++;q()};dn.onclick=()=>{res.push([T[i][1],'New']);i++;q()}}q()}}},
+
+ctxdemo:{title:'Context changes the “best example”',html:()=>`<p>Pick the <b>first</b> example that comes to mind for each prompt.</p><div id="cxHost"></div><div id="cxOut"></div>`,
+init(){const P=[['🎵 a musical instrument',['piano','guitar','harmonica','violin'],'Most people say <b>piano</b>.'],['🔥 a campfire musical instrument',['piano','guitar','harmonica','violin'],'Most say <b>guitar</b> or <b>harmonica</b>: context shifted the typical member (Roth &amp; Shoben, 1983).'],['🐶 a pet',['dog','cat','goldfish','hamster'],'Usually <b>dog</b> or <b>cat</b>.'],['🐟 a fish',['salmon','trout','goldfish','shark'],'Usually something like <b>trout</b> or <b>salmon</b>.'],['🐠 a pet fish',['salmon','guppy','goldfish','shark'],'Most say <b>guppy</b> or <b>goldfish</b>, typical of neither “pet” nor “fish” alone (Hampton, 1993).']];
+cxHost.innerHTML=P.map((p,i)=>`<div style="margin:6px 0"><span style="display:inline-block;min-width:230px">${p[0]}</span>${p[1].map(o=>`<span class="chip" data-i="${i}">${o}</span>`).join('')}<div id="cx${i}" style="font-size:.88rem;color:#40526f;margin-left:4px"></div></div>`).join('');
+cxHost.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{cxHost.querySelectorAll(`.chip[data-i="${c.dataset.i}"]`).forEach(x=>x.classList.remove('sel'));c.classList.add('sel');document.getElementById('cx'+c.dataset.i).innerHTML='↳ '+P[c.dataset.i][2]})}},
+
+essdemo:{title:'The accident: a Rips-style thought experiment',html:()=>`<p>A bird-like creature is exposed to toxic chemicals from an accident and gradually changes. Drag the slider to see how much it changes.</p>
+<input type="range" id="esR" min="0" max="100" value="0" style="width:100%;max-width:520px;accent-color:#c9a96e"><div style="display:flex;gap:30px;flex-wrap:wrap;align-items:center;margin:10px 0"><div id="esPic" style="font-size:4.5rem">🐦</div><div id="esTxt"></div></div>
+<p><b>What is it now?</b> <span class="chip" data-a="b">🐦 still a bird</span><span class="chip" data-a="i">🦗 an insect</span></p><div id="esOut"></div>`,
+init(){const upd=()=>{const v=+esR.value;esPic.textContent=v<40?'🐦':v<75?'🪲':'🦗';esTxt.innerHTML=`Looks like an insect: <b>${v}%</b><div style="height:12px;width:240px;background:#f2eee6;border-radius:6px;margin-top:4px"><div style="height:12px;width:${v*2.4}px;background:#c2544b;border-radius:6px"></div></div><span style="font-size:.85rem;color:var(--muted)">A purely similarity-based rule says: “${v>50?'insect':'bird'}”</span>`};esR.oninput=upd;upd();
+document.querySelectorAll('#lessonHost [data-a]').forEach(c=>c.onclick=()=>{const v=+esR.value;esOut.innerHTML=`<div class="gold" style="font-size:1.05rem">${c.dataset.a==='b'?`You kept it a bird${v>50?' even though it now looks more like an insect':''}. That is essentialist reasoning: the change was an accident, so its <b>essence</b> hasn’t changed.`:'You followed appearance. In Rips-style studies, people typically judged the changed animal <b>more similar</b> to an insect but still <b>more likely a bird</b>. Categorisation isn’t just similarity.'}</div>`})}}
+};
+/* ---------- RENDERING ---------- */
+const $=s=>document.querySelector(s);
+const visited=new Set();
+function show(p){document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('show',x.id===p));document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.p===p));window.scrollTo(0,0)}
+document.querySelectorAll('.navbtn').forEach(b=>b.onclick=()=>show(b.dataset.p));
+
+function renderLesson(i){
+  const L=LESSONS[i];visited.add(L.id);updProg();
+  document.querySelectorAll('#lessonNav button').forEach((b,j)=>b.classList.toggle('on',j===i));
+  const dm=L.demo?DEMOS[L.demo]:null;
+  $('#lessonHost').innerHTML=`
+  <div class="eyebrow">Lecture ${L.id} of ${LESSONS.length} · ${L.topic}</div>
+  <h1>${L.em} ${L.title}</h1><p style="color:var(--muted);margin-top:-6px;font-size:1.05rem">${L.sub}</p>
+  <div class="lesson-body"><div class="diagram">${L.svg}</div>
+  <div><ul class="bul">${L.bullets.map(b=>`<li data-e="${b[0]}">${b[1]}</li>`).join('')}</ul>
+  <div class="hook"><span style="font-size:1.4rem">🪝</span><div><b>Memory hook:</b> ${L.hook}</div></div>
+  <div class="friend">🗣️ <b>Explain it to a friend:</b> ${L.friend}</div></div></div>
+  <div class="gold">${L.gold}</div>
+  ${L.table?`<div class="card"><h3>📊 Tables &amp; studies</h3><div class="tablewrap">${L.table}</div></div>`:''}
+  ${dm?`<div class="demo"><h4>Interactive demo — ${dm.title}</h4>${dm.html()}</div>`:''}
+  ${L.videos?`<div class="card"><h3>🎬 Watch</h3><p style="color:var(--muted);font-size:.85rem;margin-top:-4px">Opens YouTube search results on this topic in a new tab.</p><div class="vid">${L.videos.map(v=>`<a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${encodeURIComponent(v[1])}">${v[0]}</a>`).join('')}</div></div>`:''}
+  <div class="check"><h4>🧩 Comprehension Check</h4>${L.check.map((c,k)=>`<details><summary>${k+1}. ${c[0]}</summary><p>✅ ${c[1]}</p></details>`).join('')}</div>
+  ${i===LESSONS.length-1?`<div class="synth" style="margin-top:18px"><div class="eyebrow">Synthesis</div><p>${SYNTH}</p></div>`:''}
+  <div class="pager">${i>0?`<button class="btn ghost" onclick="renderLesson(${i-1});scrollTo(0,0)">← ${LESSONS[i-1].title}</button>`:'<span></span>'}${i<LESSONS.length-1?`<button class="btn" onclick="renderLesson(${i+1});scrollTo(0,0)">${LESSONS[i+1].title} →</button>`:`<button class="btn" onclick="show('flash')">Go to flashcards →</button>`}</div>`;
+  if(dm&&dm.init)dm.init();
+}
+function updProg(){$('#prog').style.width=(visited.size/LESSONS.length*100)+'%';$('#progt').textContent=visited.size+' / '+LESSONS.length;document.querySelectorAll('.tile').forEach(t=>t.classList.toggle('done',visited.has(+t.dataset.id)))}
+$('#lessonNav').innerHTML=LESSONS.map((L,i)=>`<button onclick="renderLesson(${i})">${L.em} ${L.id}</button>`).join('');
+$('#tileGrid').innerHTML=LESSONS.map((L,i)=>`<div class="tile" data-id="${L.id}" onclick="show('lessons');renderLesson(${i})"><div class="em">${L.em}</div><div class="n">LECTURE ${L.id}</div><h4>${L.title}</h4><p>${L.sub}</p></div>`).join('');
+$('#synthText').innerHTML=SYNTH;
+$('#tlTrack').innerHTML=TIMELINE.map((t,i)=>`<div class="tl-item" data-i="${i}"><div class="tl-dot"></div><div class="tl-yr">${t[0]}</div><div class="tl-lb">${t[1]}</div></div>`).join('');
+document.querySelectorAll('.tl-item').forEach(el=>el.onclick=()=>{document.querySelectorAll('.tl-item').forEach(x=>x.classList.remove('on'));el.classList.add('on');const t=TIMELINE[el.dataset.i];$('#tlInfo').innerHTML=`<b>${t[0]} — ${t[1]}.</b> ${t[2]}`});
+renderLesson(0);visited.clear();updProg();
+
+/* flashcards */
+let fcTopic='All',fcOrder=FLASH.map((_,i)=>i);
+const topics=['All',...new Set(FLASH.map(f=>f[0]))];
+$('#fcFilters').innerHTML=topics.map(t=>`<span class="chip ${t==='All'?'sel':''}" data-t="${t}">${t}</span>`).join('');
+document.querySelectorAll('#fcFilters .chip').forEach(c=>c.onclick=()=>{fcTopic=c.dataset.t;document.querySelectorAll('#fcFilters .chip').forEach(x=>x.classList.toggle('sel',x===c));drawFC()});
+function drawFC(){const list=fcOrder.filter(i=>fcTopic==='All'||FLASH[i][0]===fcTopic);$('#fcInfo').textContent=list.length+' cards';
+$('#fcGrid').innerHTML=list.map(i=>`<div class="fc" onclick="this.classList.toggle('flip')"><div class="fc-in"><div class="fc-f"><div class="t">${FLASH[i][0]}</div><div class="q">${FLASH[i][1]}</div><div style="font-size:.75rem;color:var(--muted);margin-top:8px">tap to flip ↻</div></div><div class="fc-b">${FLASH[i][2]}</div></div></div>`).join('')}
+$('#fcShuffle').onclick=()=>{fcOrder.sort(()=>Math.random()-.5);drawFC()};
+$('#fcReset').onclick=()=>{fcOrder=FLASH.map((_,i)=>i);drawFC()};
+drawFC();$('#fcCount').textContent=FLASH.length;
+
+/* mcq */
+let right=0,done=0;
+function drawMCQ(){right=0;done=0;$('#scoreN').textContent=0;$('#scoreT').textContent=0;
+$('#mcqHost').innerHTML=MCQ.map((q,i)=>`<div class="mcq" data-i="${i}"><div class="qn">QUESTION ${i+1} OF ${MCQ.length}</div><div class="qt">${q[0]}</div>${q[1].map((o,j)=>`<button class="opt" data-j="${j}">${'ABCD'[j]}. ${o}</button>`).join('')}<div class="expl"></div></div>`).join('');
+document.querySelectorAll('.mcq').forEach(box=>{const q=MCQ[box.dataset.i];box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const j=+b.dataset.j;box.querySelectorAll('.opt').forEach(x=>{x.disabled=true;if(+x.dataset.j===q[2])x.classList.add('right')});
+if(j!==q[2])b.classList.add('wrong');else right++;done++;const ex=box.querySelector('.expl');ex.style.display='block';ex.innerHTML=(j===q[2]?'✅ <b>Correct.</b> ':'❌ <b>Not quite.</b> ')+q[3];
+$('#scoreN').textContent=right;$('#scoreT').textContent=done;if(done===MCQ.length)$('#scoreT').textContent=done+' — final: '+Math.round(right/MCQ.length*100)+'%'})})}
+$('#mcqReset').onclick=drawMCQ;drawMCQ();$('#mcqCount').textContent=MCQ.length;
+</script>
+</body></html>
